@@ -90,12 +90,6 @@
   <ItemGroup>
     <None Include="packages.config" />
   </ItemGroup>
-  <ItemGroup>
-    <ProjectReference Include="..\MVCWebProject\MVCWebProject.csproj">
-      <Project>{3479D5ED-E3A5-42E5-A238-1A4D4E510C8B}</Project>
-      <Name>MVCWebProject</Name>
-    </ProjectReference>
-  </ItemGroup>
   <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it.
        Other similar extension points exist, see Microsoft.Common.targets.

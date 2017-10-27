@@ -1,4 +1,6 @@
-﻿@model MVCWebProject2.Models.RegisterViewModel
+﻿@using MVCWebProject2.utilities
+@model MVCWebProject2.Models.RegisterViewModel
+
 @{
     ViewBag.Title = "Register";
 }
@@ -11,6 +13,18 @@
     <h4>Create a new account.</h4>
     <hr />
     @Html.ValidationSummary("", new { @class = "text-danger" })
+    <div class="form-group">
+        @Html.LabelFor(m => m.FirstName, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.FirstName, new { @class = "form-control" })
+        </div>
+    </div>
+    <div class="form-group">
+        @Html.LabelFor(m => m.Surname, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+            @Html.TextBoxFor(m => m.Surname, new { @class = "form-control" })
+        </div>
+    </div>
     <div class="form-group">
         @Html.LabelFor(m => m.Email, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
@@ -27,6 +41,19 @@
         @Html.LabelFor(m => m.ConfirmPassword, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.PasswordFor(m => m.ConfirmPassword, new { @class = "form-control" })
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BootstrapTheme, new { @class = "col-md-2 control-label" })
+        <div class="col-md-10">
+          
+            <select name="BootstrapTheme" id="BootstrapTheme" class="form-control">
+                @foreach (Constants.BootstrapThemes theme in Enum.GetValues(typeof(Constants.BootstrapThemes)))
+                {
+                    <option value="@theme.ToString()">@theme.ToString()</option>
+                }
+            </select>
         </div>
     </div>
     <div class="form-group">

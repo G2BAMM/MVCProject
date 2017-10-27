@@ -3,6 +3,7 @@ using System.Web.Optimization;
 
 namespace MVCWebProject2
 {
+    
     public class BundleConfig
     {
         // For more information on bundling, visit https://go.microsoft.com/fwlink/?LinkId=301862
@@ -24,7 +25,6 @@ namespace MVCWebProject2
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/bootstrap.css",
                       "~/Content/site.css"));
         }
     }

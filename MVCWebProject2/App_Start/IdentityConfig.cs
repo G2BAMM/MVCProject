@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : IdentityConfig.cs                 '
+'  Description      : Manages custom account logic      ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 23 Oct 2017                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using System;
 using System.Collections.Generic;
 using System.Data.Entity;
 using System.Linq;
@@ -11,6 +25,8 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
+using System.Net.Mail;
+using System.Net;
 
 namespace MVCWebProject2
 {
@@ -19,6 +35,23 @@ namespace MVCWebProject2
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
+            SmtpClient client = new SmtpClient();
+            //client.Port = 587;
+            client.Host = "smtp.gmail.com";
+            client.EnableSsl = true;
+            //client.Timeout = 10000;
+            client.DeliveryMethod = SmtpDeliveryMethod.Network;
+            client.UseDefaultCredentials = false;
+            client.Credentials = new NetworkCredential("g2bam2012@gmail.com", "g2bamLeo1");
+            MailMessage mailMessage = new MailMessage();
+            mailMessage.From = new MailAddress("admin@easyhire.com", "Easy Hire");
+            mailMessage.To.Add(new MailAddress(message.Destination));
+            mailMessage.Subject = message.Subject;
+            mailMessage.Body = message.Body;
+            mailMessage.IsBodyHtml = true;
+            client.Send(mailMessage);
+            //return client.SendMailAsync(from: mailMessage.From.ToString(), recipients: mailMessage.To.ToString(), subject: mailMessage.Subject, body: mailMessage.Body);
+
             return Task.FromResult(0);
         }
     }

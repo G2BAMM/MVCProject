@@ -1,4 +1,19 @@
-﻿using System.Data.Entity;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : IdentityModels.cs                 '
+'  Description      : Manages the custom identity models' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 17 Oct 2017                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using System;
+using System.Data.Entity;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Identity;
@@ -15,6 +30,15 @@ namespace MVCWebProject2.Models
             var userIdentity = await manager.CreateIdentityAsync(this, DefaultAuthenticationTypes.ApplicationCookie);
             // Add custom user claims here
             return userIdentity;
+    }
+
+        public string BootstrapTheme { get; set; }
+        public string FirstName { get; set; }
+        public string Surname { get; set; }
+
+        internal Task GenerateUserIdentityAsync(ApplicationUser currentUser)
+        {
+            throw new NotImplementedException();
         }
     }
 

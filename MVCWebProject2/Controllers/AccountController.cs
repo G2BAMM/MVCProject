@@ -1,7 +1,18 @@
-﻿using System;
-using System.Globalization;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : AccountController.cs              '
+'  Description      : Manages custom account logic      ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 17 Oct 2017                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
 using System.Linq;
-using System.Security.Claims;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
@@ -9,6 +20,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 
 namespace MVCWebProject2.Controllers
 {
@@ -22,7 +35,7 @@ namespace MVCWebProject2.Controllers
         {
         }
 
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager )
+        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager)
         {
             UserManager = userManager;
             SignInManager = signInManager;
@@ -34,9 +47,9 @@ namespace MVCWebProject2.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -53,7 +66,19 @@ namespace MVCWebProject2.Controllers
         }
 
         //
-        // GET: /Account/Login
+        
+        [AllowAnonymous]
+        public ActionResult ConfirmUpdate()
+        {
+            return View();
+        }
+
+        [AllowAnonymous]
+        public ActionResult ConfirmRegistration()
+        {
+            return View();
+        }
+
         [AllowAnonymous]
         public ActionResult Login(string returnUrl)
         {
@@ -75,10 +100,31 @@ namespace MVCWebProject2.Controllers
 
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
+            var loginManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+            var loginUser = loginManager.FindByEmail(model.Email);
+            if (loginUser != null)
+            {
+                if (loginUser.EmailConfirmed == false)
+                {
+                    ViewBag.AttemptSignIn = true;
+                    return View("ConfirmRegistration");
+                }
+            }
+           
             var result = await SignInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, shouldLockout: false);
             switch (result)
             {
                 case SignInStatus.Success:
+                    //Get the user's theme, first name and surname from their OWIN login details, 
+                    var Grant = SignInManager.AuthenticationManager.AuthenticationResponseGrant;
+                    var currentUserId = Grant.Identity.GetUserId();
+                    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    var currentUser = manager.FindById(currentUserId);
+                    //Create a cookie so that we can display the extra field[s] without having to query SQL 
+                    //for it on every page request from the ASPNetUsers table
+                    Response.Cookies["userInfo"]["BootstrapTheme"] = currentUser.BootstrapTheme;
+                    Response.Cookies["userInfo"]["FirstName"] = currentUser.FirstName;
+                    Response.Cookies["userInfo"]["Surname"] = currentUser.Surname;
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -89,6 +135,21 @@ namespace MVCWebProject2.Controllers
                     ModelState.AddModelError("", "Invalid login attempt.");
                     return View(model);
             }
+        }
+    
+
+        //
+        // POST: /Account/LogOff
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LogOff()
+        {
+            //Owin sign out
+            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+            //Delete our custom cookie
+            Response.Cookies["userInfo"].Expires = DateTime.Now.AddDays(-1);
+            //Set the default theme before returning to the home page
+            return RedirectToAction("Index", "Home");
         }
 
         //
@@ -151,19 +212,75 @@ namespace MVCWebProject2.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, BootstrapTheme = model.BootstrapTheme, FirstName = model.FirstName, Surname = model.Surname };
                 var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-                    
+                    //User was successfully created so now add the to the users role
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    //Does our role exist?
+                    if (!roleManager.RoleExists("User"))
+                    {
+                        // Role doesn't exist so create it now    
+                        var role = new IdentityRole
+                        {
+                            Name = "User"
+                        };
+                        roleManager.Create(role);
+                    }
+                    //Add the user to the 'User' role                   
+                    UserManager.AddToRole(user.Id, "User");
+
+                    //Finally sign the user in now
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+                    if (!roleManager.RoleExists("Super Admin"))
+                    {
+                        // first we create Admin rool    
+                        var role = new IdentityRole();
+                        role.Name = "Super Admin";
+                        roleManager.Create(role);
+
+                        //Here we create a Admin super user who will maintain the website                   
+
+                        user = new ApplicationUser();
+                        user.UserName = "brian@zungalow.com";
+                        user.Email = "brian@zungalow.com";
+                        user.BootstrapTheme = "Standard";
+                        user.FirstName = "Super";
+                        user.Surname = "Admin";
+                        user.EmailConfirmed = true;
+
+                        string userPWD = "Webmaster1!";
+
+                        var chkUser = UserManager.Create(user, userPWD);
+
+                        //Add default User to Role Admin    
+                        if (chkUser.Succeeded)
+                        {
+                            var result1 = UserManager.AddToRole(user.Id, "Super Admin");
+
+                        }
+                    }
+
+
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
-                    // string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                    // var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
-                    // await UserManager.SendEmailAsync(user.Id, "Confirm your account", "Please confirm your account by clicking <a href=\"" + callbackUrl + "\">here</a>");
-
-                    return RedirectToAction("Index", "Home");
+                    
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                    //Generate a custom message
+                    var mailMessage = $"<html><body>" +
+                                      $"<p>Dear {model.FirstName},</p>" +
+                                      $"<p>Thank you for signing up with us today, we just need you to confirm your identity.</p>" +
+                                      $"<p>Please confirm your account by clicking <a href=\"{callbackUrl}\">here</a></p>" +
+                                      $"<p>Thank you,</p>" +
+                                      $"<p>Easy Hire Admin</p>" +
+                                      $"</body></html>";
+                    //Now send the mail using identity config set up for OWIN
+                    await UserManager.SendEmailAsync(user.Id, "Confirm your account", mailMessage);
+                    ViewBag.AttemptSignIn = false;
+                    return View("ConfirmRegistration");
                 }
                 AddErrors(result);
             }
@@ -211,10 +328,17 @@ namespace MVCWebProject2.Controllers
 
                 // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                 // Send an email with this link
-                // string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
-                // var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);		
-                // await UserManager.SendEmailAsync(user.Id, "Reset Password", "Please reset your password by clicking <a href=\"" + callbackUrl + "\">here</a>");
-                // return RedirectToAction("ForgotPasswordConfirmation", "Account");
+                string code = await UserManager.GeneratePasswordResetTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: Request.Url.Scheme);
+                //Generate a custom message
+                var mailMessage = $"<html><body>" +
+                                  $"<p>Dear User,</p>" +
+                                  $"<p>Please reset your password by clicking <a href=\"{callbackUrl}\">here</a></p>" +
+                                  $"<p>Thank you,</p>" +
+                                  $"<p>Easy Hire Admin</p>" +
+                                  $"</body></html>";
+                await UserManager.SendEmailAsync(user.Id, "Reset Password", mailMessage);
+                return RedirectToAction("ForgotPasswordConfirmation", "Account");
             }
 
             // If we got this far, something failed, redisplay form
@@ -261,6 +385,8 @@ namespace MVCWebProject2.Controllers
             }
             AddErrors(result);
             return View();
+
+            
         }
 
         //
@@ -374,7 +500,6 @@ namespace MVCWebProject2.Controllers
                     result = await UserManager.AddLoginAsync(user.Id, info.Login);
                     if (result.Succeeded)
                     {
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
                         return RedirectToLocal(returnUrl);
                     }
                 }
@@ -385,15 +510,9 @@ namespace MVCWebProject2.Controllers
             return View(model);
         }
 
-        //
-        // POST: /Account/LogOff
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LogOff()
-        {
-            AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
-            return RedirectToAction("Index", "Home");
-        }
+        
+
+        
 
         //
         // GET: /Account/ExternalLoginFailure

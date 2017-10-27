@@ -1,4 +1,18 @@
-﻿using System.Collections.Generic;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : AccountViewModels.cs              '
+'  Description      : Manages the accounts models       ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 17 Oct 2017                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 
 namespace MVCWebProject2.Models
@@ -65,6 +79,16 @@ namespace MVCWebProject2.Models
     public class RegisterViewModel
     {
         [Required]
+        [Display(Name = "First Name")]
+        [StringLength(50)]
+        public string FirstName { get; set; }
+
+        [Required]
+        [Display(Name = "Surname")]
+        [StringLength(50)]
+        public string Surname { get; set; }
+
+        [Required]
         [EmailAddress]
         [Display(Name = "Email")]
         public string Email { get; set; }
@@ -79,6 +103,9 @@ namespace MVCWebProject2.Models
         [Display(Name = "Confirm password")]
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string ConfirmPassword { get; set; }
+
+        [Display(Name ="Choose Theme")]
+        public string BootstrapTheme { get; set; }
     }
 
     public class ResetPasswordViewModel

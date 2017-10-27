@@ -1,0 +1,15 @@
+﻿
+@{
+    ViewBag.Title = "Choose Theme";
+}
+<h2>Choose Theme</h2>
+
+@if (!ViewBag.ThemeFound)
+{
+    <p>Please use the navigation bar to set your selected theme.</p>
+}
+else
+{ 
+    <p>New theme has been set!</p>
+    <p>Please use the navigation bar in future to set your selected theme to ensure it is set up correctly.</p>
+}

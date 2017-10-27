@@ -1,0 +1,52 @@
+﻿@model IEnumerable<MVCWebProject2.Models.VehicleViewModel>
+
+@{
+    ViewBag.Title = "Vehicle";
+}
+
+<h2>Vehicle</h2>
+
+<p>
+    @Html.ActionLink("Create New", "Create", new { }, new { @class = "btn btn-default", @data_toggle = "tooltip", @data_placement = "left", @title = "Add a new vehicle" })
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.Make)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.ModelType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.BodyTypeId)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.NumberOfDoors)
+        </th>
+        <th></th>
+    </tr>
+
+@foreach (var item in Model) {
+    <tr>
+        <td>
+            @Html.DisplayFor(modelItem => item.Make)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.ModelType)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.BodyTypeId)
+        </td>
+        <td>
+            @Html.DisplayFor(modelItem => item.NumberOfDoors)
+        </td>
+        <td>
+            @Html.ActionLink("Edit", "Edit", new { id=item.VehicleID}) |
+            @Html.ActionLink("Details", "Details", new { id=item.VehicleID }) |
+            @Html.ActionLink("Delete", "Delete", new { id=item.VehicleID })
+        </td>
+    </tr>
+}
+
+</table>

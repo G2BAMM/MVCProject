@@ -7,6 +7,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System.Net;
 
 namespace MVCWebProject2.Controllers
 {
@@ -32,9 +34,9 @@ namespace MVCWebProject2.Controllers
             {
                 return _signInManager ?? HttpContext.GetOwinContext().Get<ApplicationSignInManager>();
             }
-            private set 
-            { 
-                _signInManager = value; 
+            private set
+            {
+                _signInManager = value;
             }
         }
 
@@ -52,8 +54,9 @@ namespace MVCWebProject2.Controllers
 
         //
         // GET: /Manage/Index
-        public async Task<ActionResult> Index(ManageMessageId? message)
+        public ActionResult Index()
         {
+            /*
             ViewBag.StatusMessage =
                 message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
                 : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
@@ -72,6 +75,153 @@ namespace MVCWebProject2.Controllers
                 Logins = await UserManager.GetLoginsAsync(userId),
                 BrowserRemembered = await AuthenticationManager.TwoFactorBrowserRememberedAsync(userId)
             };
+            */
+            var userId = User.Identity.GetUserId();
+            var currentUser = UserManager.FindById(userId);
+            var model = new UpdateDetailsViewModel
+            {
+                PhoneNumber = currentUser.PhoneNumber,
+                FirstName = currentUser.FirstName,
+                Surname = currentUser.Surname,
+                Email = currentUser.Email,
+                BootstrapTheme = currentUser.BootstrapTheme,
+                NewPassword = currentUser.PasswordHash,
+                ConfirmPassword = currentUser.PasswordHash,
+                OldPassword = currentUser.PasswordHash
+
+            };
+
+            ViewBag.Name = User.Identity.Name;
+
+            return View(model);
+        }
+
+        //
+        // POST: /Manage/Update Details
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(UpdateDetailsViewModel model)
+        {
+            //Set these flags so we know what was changed
+            var emailVerified = true;
+            var passwordChanged = false;
+            
+            if (!ModelState.IsValid)
+            {
+                return View(model);
+            }
+            /*
+             * Now we need to make the changes saved on the form and take appropriate action[s] if email address or passwords were updated
+             * as we need to log the user out in these circumstances but we need to save any theme, name changes or tele number changes
+             * before we update any email address or passwords.
+             * 
+             */
+            if (model.OldPassword == null && model.NewPassword != null)
+            {
+                ModelState.AddModelError("OldPassword", "Please enter your old password first when making changes to it!");
+                return View(model);
+            }
+
+            //Now we can retrieve the user details from SQL as we have no form errors and we will need to compare everything to decide what we do with the current login session
+            var userId = User.Identity.GetUserId();
+            var currentUser = UserManager.FindById(userId);
+
+            if (ChangedPassword(model))
+            {
+                //We're updating our password so we can attempt to do that now 
+                //we will perform the required logout after the rest of any changes are applied
+                var pwdResult = await UserManager.ChangePasswordAsync(User.Identity.GetUserId(), model.OldPassword, model.NewPassword);
+                if (pwdResult.Succeeded)
+                {
+                    passwordChanged = true;
+                }
+                else
+                {
+                    AddErrors(pwdResult);
+                    return View(model);
+                }
+                
+            }
+
+            if (ChangedEmailAddress(model))
+            {
+                //Update the user's email address to the one entered on the form
+                var emailResult = await UserManager.SetEmailAsync(User.Identity.GetUserId(), model.Email);
+                //Did the change of email address happen?
+                if (emailResult.Succeeded)
+                {
+                    //Email update was successful
+                    emailVerified = false;
+                    //Generate a new security token
+                    string code = await UserManager.GenerateEmailConfirmationTokenAsync(currentUser.Id);
+                    //Generate the dynamic link for the email to be sent to the user to confirm the new address
+                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = currentUser.Id, code = code }, protocol: Request.Url.Scheme);
+                    //Generate a custom email message
+                    var mailMessage = $"<html><body>" +
+                                      $"<p>Dear {model.FirstName},</p>" +
+                                      $"<p>Thank you for updating your account with us today, we just need you to confirm your new email address now.</p>" +
+                                      $"<p>Please confirm your account by clicking <a href=\"{callbackUrl}\">here</a></p>" +
+                                      $"<p>Thank you,</p>" +
+                                      $"<p>Easy Hire Admin</p>" +
+                                      $"</body></html>";
+                    //Send email verification to the user 
+                    await UserManager.SendEmailAsync(currentUser.Id, "Confirm your email", mailMessage);
+                }
+                else
+                //Email update was not successful so show the error message[s] and return the completed form to the user
+                { 
+                    AddErrors(emailResult);
+                    return View(model);
+                }
+            }
+
+            //Update our user details to reflect any changes made to other areas on the form
+            currentUser.BootstrapTheme = model.BootstrapTheme;
+            currentUser.FirstName = model.FirstName;
+            currentUser.Surname = model.Surname;
+            currentUser.PhoneNumber = model.PhoneNumber;
+            currentUser.UserName = model.Email;
+            //Perform general account update
+            var result = await UserManager.UpdateAsync(currentUser);
+            //Was the update successful?
+            if (result.Succeeded)
+            {
+            //General update was successful
+                if (!emailVerified || passwordChanged)
+                //Email or password was changed
+                {
+                    //Sign user out
+                    AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
+                    //Delete our custom cookie
+                    Response.Cookies["userInfo"].Expires = DateTime.Now.AddDays(-1);
+                    //Email was changed
+                    if (!emailVerified)
+                    {
+                        //Send the user to the email verification page
+                        ViewBag.AttemptSignIn = false;
+                        return Redirect("~/Account/ConfirmRegistration");
+                        
+                    }else
+                    //Password was changed
+                    {
+                        //Send the user to the login page now
+                        return Redirect("~/Account/Login");
+                    }
+                }
+                else
+                //Email or password was not changed 
+                {
+                    //Update the user login details and cookie
+                    Response.Cookies["userInfo"]["BootstrapTheme"] = currentUser.BootstrapTheme;
+                    Response.Cookies["userInfo"]["FirstName"] = currentUser.FirstName;
+                    Response.Cookies["userInfo"]["Surname"] = currentUser.Surname;
+                    //Redirect to confirm update view as the cookie for the theme (if it was changed) will only apply on next http request
+                    return Redirect("~/Account/ConfirmUpdate");
+                }
+                
+            }
+            //General update was not successful so show the error message[s] and return the completed form to the user.
+            AddErrors(result);
             return View(model);
         }
 
@@ -333,7 +483,7 @@ namespace MVCWebProject2.Controllers
             base.Dispose(disposing);
         }
 
-#region Helpers
+        #region Helpers
         // Used for XSRF protection when adding external logins
         private const string XsrfKey = "XsrfId";
 
@@ -373,6 +523,24 @@ namespace MVCWebProject2.Controllers
             return false;
         }
 
+        private bool ChangedPassword(UpdateDetailsViewModel model)
+        {
+            if (model.NewPassword != null)
+            {
+                return true;
+            }
+            return false;
+        }
+
+        private bool ChangedEmailAddress(UpdateDetailsViewModel model)
+        {
+            if (model.Email != User.Identity.GetUserName())
+            {
+                return true;
+            }
+            return false;
+        }
+
         public enum ManageMessageId
         {
             AddPhoneSuccess,
@@ -384,6 +552,6 @@ namespace MVCWebProject2.Controllers
             Error
         }
 
-#endregion
+        #endregion
     }
 }

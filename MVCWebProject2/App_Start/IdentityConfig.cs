@@ -42,7 +42,7 @@ namespace MVCWebProject2
             //client.Timeout = 10000;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("Youremailaddress", "yourpassword");
+            client.Credentials = new NetworkCredential("Youremailaddress", "yourpassword"); 
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("admin@easyhire.com", "Easy Hire");
             mailMessage.To.Add(new MailAddress(message.Destination));

@@ -1,4 +1,18 @@
-﻿using System.Collections.Generic;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : ManageViewModels.cs               '
+'  Description      : Manages account management models ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 23 Oct 2017                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;

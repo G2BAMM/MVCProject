@@ -1,4 +1,18 @@
-﻿using System;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : ManageController.cs               '
+'  Description      : Manages account management logic  ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 23 Oct 2017                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using System;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web;

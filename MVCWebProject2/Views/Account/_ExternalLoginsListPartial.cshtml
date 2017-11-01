@@ -20,7 +20,7 @@
                 <p>
                     @foreach (AuthenticationDescription p in loginProviders) {
                         imagePath = "../resources/" + p.AuthenticationType + "_signin.png";
-                        <input type="image" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account" src="@imagePath" data-placement="top" data-toggle="tooltip" /><br /><br />
+                        <input type="image" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account" src="@imagePath" data-placement="bottom" data-toggle="tooltip" border="0" /><br /><br />
                         
                     }
                 </p>

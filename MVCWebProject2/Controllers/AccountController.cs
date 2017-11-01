@@ -531,27 +531,69 @@ namespace MVCWebProject2.Controllers
 
             if (ModelState.IsValid)
             {
-                // Get the information about the user from the external login provider
-                var info = await AuthenticationManager.GetExternalLoginInfoAsync();
-                if (info == null)
-                {
-                    return View("ExternalLoginFailure");
-                }
-                var user = new ApplicationUser { UserName = model.Email, Email = model.Email };
-                var result = await UserManager.CreateAsync(user);
+                var user = new ApplicationUser { UserName = model.Email, Email = model.Email, BootstrapTheme = model.BootstrapTheme, FirstName = model.FirstName, Surname = model.Surname, EmailConfirmed = true };
+                var result = await UserManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    result = await UserManager.AddLoginAsync(user.Id, info.Login);
-                    if (result.Succeeded)
+                    //User was successfully created so now add the to the users role
+                    var roleManager = new RoleManager<IdentityRole>(new RoleStore<IdentityRole>(new ApplicationDbContext()));
+                    //Does our role exist?
+                    if (!roleManager.RoleExists("User"))
                     {
-                        return RedirectToLocal(returnUrl);
+                        // Role doesn't exist so create it now    
+                        var role = new IdentityRole
+                        {
+                            Name = "User"
+                        };
+                        roleManager.Create(role);
                     }
-                }
-                AddErrors(result);
-            }
+                    //Add the user to the 'User' role                   
+                    UserManager.AddToRole(user.Id, "User");
 
-            ViewBag.ReturnUrl = returnUrl;
-            return View(model);
+                    //Finally sign the user in now
+                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
+
+                    if (!roleManager.RoleExists("Super Admin"))
+                    {
+                        // first we create Admin rool    
+                        var role = new IdentityRole();
+                        role.Name = "Super Admin";
+                        roleManager.Create(role);
+
+                        //Here we create a Admin super user who will maintain the website                   
+
+                        var adminUser = new ApplicationUser();
+                        adminUser.UserName = "brian@zungalow.com";
+                        adminUser.Email = "brian@zungalow.com";
+                        adminUser.BootstrapTheme = "Standard";
+                        adminUser.FirstName = "Super";
+                        adminUser.Surname = "Admin";
+                        adminUser.EmailConfirmed = true;
+
+                        string userPWD = "Webmaster1!";
+
+                        var chkUser = UserManager.Create(adminUser, userPWD);
+
+                        //Add default User to Role Admin    
+                        if (chkUser.Succeeded)
+                        {
+                            var result1 = UserManager.AddToRole(adminUser.Id, "Super Admin");
+                        }
+                    }
+                        //Sign the user in now
+                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                        //Create a cookie so that we can display the extra field[s] without having to query SQL 
+                        //for it on every page request from the ASPNetUsers table
+                        Response.Cookies["userInfo"]["BootstrapTheme"] = model.BootstrapTheme;
+                        Response.Cookies["userInfo"]["FirstName"] = model.FirstName;
+                        Response.Cookies["userInfo"]["Surname"] = model.Surname;
+
+                        return Redirect("~/Manage/ConfirmExternalRegister");
+                    }
+               AddErrors(result);
+            }
+            // If we got this far, something failed, redisplay form
+            return View(model);  
         }
 
         

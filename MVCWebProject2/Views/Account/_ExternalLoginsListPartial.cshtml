@@ -1,6 +1,6 @@
 ﻿@model MVCWebProject2.Models.ExternalLoginListViewModel
 @using Microsoft.Owin.Security
-
+@{ var imagePath = "";}
 <h4>Use another service to log in.</h4>
 <hr />
 @{
@@ -19,7 +19,9 @@
             <div id="socialLoginList">
                 <p>
                     @foreach (AuthenticationDescription p in loginProviders) {
-                        <button type="submit" class="btn btn-default" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account">@p.AuthenticationType</button>
+                        imagePath = "../resources/" + p.AuthenticationType + "_signin.png";
+                        <input type="image" id="@p.AuthenticationType" name="provider" value="@p.AuthenticationType" title="Log in using your @p.Caption account" src="@imagePath" data-placement="top" data-toggle="tooltip" /><br /><br />
+                        
                     }
                 </p>
             </div>

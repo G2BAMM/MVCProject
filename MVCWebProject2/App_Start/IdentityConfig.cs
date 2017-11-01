@@ -27,6 +27,7 @@ using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
 using System.Net.Mail;
 using System.Net;
+using System.Web.Configuration;
 
 namespace MVCWebProject2
 {
@@ -37,12 +38,12 @@ namespace MVCWebProject2
             // Plug in your email service here to send an email.
             SmtpClient client = new SmtpClient();
             //client.Port = 587;
-            client.Host = "smtp.gmail.com";
+            client.Host = WebConfigurationManager.AppSettings["MailHost"];
             client.EnableSsl = true;
             //client.Timeout = 10000;
             client.DeliveryMethod = SmtpDeliveryMethod.Network;
             client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("Youremailaddress", "yourpassword"); 
+            client.Credentials = new NetworkCredential(WebConfigurationManager.AppSettings["MailAccount"], WebConfigurationManager.AppSettings["MailPassword"]); 
             MailMessage mailMessage = new MailMessage();
             mailMessage.From = new MailAddress("admin@easyhire.com", "Easy Hire");
             mailMessage.To.Add(new MailAddress(message.Destination));

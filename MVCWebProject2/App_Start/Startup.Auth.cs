@@ -20,6 +20,9 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using MVCWebProject2.Models;
+using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
+using Microsoft.Owin.Security.MicrosoftAccount;
+using System.Web.Configuration;
 
 namespace MVCWebProject2
 {
@@ -50,7 +53,7 @@ namespace MVCWebProject2
                         validateInterval: TimeSpan.FromMinutes(30),
                         regenerateIdentity: (manager, user) => user.GenerateUserIdentityAsync(manager))
                 }
-            });            
+            });
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
             // Enables the application to temporarily store user information when they are verifying the second factor in the two-factor authentication process.
@@ -63,8 +66,23 @@ namespace MVCWebProject2
 
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
-            //    clientId: "",
-            //    clientSecret: "");
+            //   clientId: "981864f3-6f38-4548-b5a3-cc463dbac14d",
+            //   clientSecret: "kbdyyAXHB066*!wfGNP18|-");
+
+            
+            var mo = new MicrosoftAccountAuthenticationOptions
+            {
+                Caption = "Windows",
+                ClientId = WebConfigurationManager.AppSettings["MicrosoftClientID"],
+                ClientSecret = WebConfigurationManager.AppSettings["MicrosoftClientSecret"],
+            };
+
+            mo.Scope.Add("wl.basic");
+            mo.Scope.Add("wl.emails");
+
+            app.UseMicrosoftAccountAuthentication(mo);
+
+
 
             //app.UseTwitterAuthentication(
             //   consumerKey: "",
@@ -74,11 +92,12 @@ namespace MVCWebProject2
             //   appId: "",
             //   appSecret: "");
 
-            //app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
-            //{
-            //    ClientId = "",
-            //    ClientSecret = ""
-            //});
+            app.UseGoogleAuthentication(new GoogleOAuth2AuthenticationOptions()
+            {
+                ClientId = WebConfigurationManager.AppSettings["GoogleClientID"],
+                ClientSecret = WebConfigurationManager.AppSettings["GoogleClientSecret"],
+                CallbackPath = new PathString("/signin-google")
+            });
         }
     }
 }

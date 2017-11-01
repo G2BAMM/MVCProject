@@ -13,7 +13,15 @@ namespace MVCWebProject2
         {
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
-            
+            routes.MapRoute(
+                name: "signin-microsoft",
+                url: "MVCWebProject/signin-microsoft",
+                defaults: new { controller = "Account", action = "ExternalLoginCallback" });
+
+            routes.MapRoute(
+                name: "signin-google", 
+                url: "MVCWebProject/signin-google", 
+                defaults: new { controller = "Account", action = "ExternalLoginCallback" });
 
             routes.MapRoute(
                 name: "Default",

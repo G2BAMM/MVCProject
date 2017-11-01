@@ -22,6 +22,7 @@ using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
+using System.Web.Configuration;
 
 namespace MVCWebProject2.Controllers
 {
@@ -449,13 +450,54 @@ namespace MVCWebProject2.Controllers
         public async Task<ActionResult> ExternalLoginCallback(string returnUrl)
         {
             var loginInfo = await AuthenticationManager.GetExternalLoginInfoAsync();
+            
+            var result = SignInStatus.Failure;
             if (loginInfo == null)
             {
-                return RedirectToAction("Login");
+                //User was not found on 3rd party login system
+                return RedirectToAction("ExternalLoginFailure");
             }
+            else
+            {
+                //User was found on the 3rd party system so process the custom login now
+                var loginManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                //Check to see if a local user account exists with this email address
+                if (loginInfo.Email == null || loginInfo.Email == "")
+                {
+                    return RedirectToAction("ExternalLoginFailure");
+                }
+                var loginUser = await loginManager.FindByEmailAsync(loginInfo.Email);
+                //Local user account was found
+                if (loginUser != null)
+                {
+                    //Local user account was found so we can log them in now
+                    result = SignInStatus.Success;
+                    //Set a new db context to update the current users record
+                    var updateUser = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    //Reload the user details from SQL
+                    var confirmedUser = updateUser.FindById(loginUser.Id);
+                    if (!confirmedUser.EmailConfirmed)
+                    { 
+                        //Update the verified email flag as we can now confirm this exists from the 3rd party login success
+                        confirmedUser.EmailConfirmed = true;
+                        //Update the user account back to SQL
+                        await updateUser.UpdateAsync(confirmedUser);
+                    }
+                    //Now logon our user using the original usermanager record
+                    SignInManager.SignIn(loginUser, false, false);
+                    //Create a cookie so that we can display the extra field[s] without having to query SQL 
+                    //for it on every page request from the ASPNetUsers table
+                    Response.Cookies["userInfo"]["BootstrapTheme"] = loginUser.BootstrapTheme;
+                    Response.Cookies["userInfo"]["FirstName"] = loginUser.FirstName;
+                    Response.Cookies["userInfo"]["Surname"] = loginUser.Surname;
+                }
 
+            }
+            
             // Sign in the user with this external login provider if the user already has a login
-            var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            //var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
+            
+            
             switch (result)
             {
                 case SignInStatus.Success:
@@ -471,6 +513,8 @@ namespace MVCWebProject2.Controllers
                     ViewBag.LoginProvider = loginInfo.Login.LoginProvider;
                     return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = loginInfo.Email });
             }
+           
+            
         }
 
         //

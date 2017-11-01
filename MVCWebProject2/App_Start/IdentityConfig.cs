@@ -27,6 +27,7 @@ using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
 using System.Net.Mail;
 using System.Net;
+using System.Web.Configuration;
 
 namespace MVCWebProject2
 {
@@ -35,16 +36,20 @@ namespace MVCWebProject2
         public Task SendAsync(IdentityMessage message)
         {
             // Plug in your email service here to send an email.
-            SmtpClient client = new SmtpClient();
-            //client.Port = 587;
-            client.Host = "smtp.gmail.com";
-            client.EnableSsl = true;
-            //client.Timeout = 10000;
-            client.DeliveryMethod = SmtpDeliveryMethod.Network;
-            client.UseDefaultCredentials = false;
-            client.Credentials = new NetworkCredential("Youremailaddress", "yourpassword"); 
-            MailMessage mailMessage = new MailMessage();
-            mailMessage.From = new MailAddress("admin@easyhire.com", "Easy Hire");
+            SmtpClient client = new SmtpClient
+            {
+                //client.Port = 587;
+                Host = WebConfigurationManager.AppSettings["MailHost"],
+                EnableSsl = true,
+                //client.Timeout = 10000;
+                DeliveryMethod = SmtpDeliveryMethod.Network,
+                UseDefaultCredentials = false,
+                Credentials = new NetworkCredential(WebConfigurationManager.AppSettings["MailAccount"], WebConfigurationManager.AppSettings["MailPassword"])
+            };
+            MailMessage mailMessage = new MailMessage
+            {
+                From = new MailAddress("admin@easyhire.com", "Easy Hire")
+            };
             mailMessage.To.Add(new MailAddress(message.Destination));
             mailMessage.Subject = message.Subject;
             mailMessage.Body = message.Body;

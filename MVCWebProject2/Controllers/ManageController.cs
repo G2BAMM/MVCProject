@@ -66,6 +66,11 @@ namespace MVCWebProject2.Controllers
             }
         }
 
+
+        public ActionResult ConfirmExternalRegister()
+        {
+            return View();
+        }
         //
         // GET: /Manage/Index
         public ActionResult Index()

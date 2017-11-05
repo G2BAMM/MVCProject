@@ -22,7 +22,7 @@ using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
-using System.Web.Configuration;
+using MVCWebProject2.utilities;
 
 namespace MVCWebProject2.Controllers
 {
@@ -116,16 +116,17 @@ namespace MVCWebProject2.Controllers
             switch (result)
             {
                 case SignInStatus.Success:
-                    //Get the user's theme, first name and surname from their OWIN login details, 
+                    //There is no http context yet at this stage of the process so we need to get the details from the ResponseGrant instead
                     var Grant = SignInManager.AuthenticationManager.AuthenticationResponseGrant;
+                    //Get our authenitcated user from the response grant
                     var currentUserId = Grant.Identity.GetUserId();
+                    //Set up our user manager
                     var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    //Get the details (whole row from SQL table) for our local user from the SQL user manager
                     var currentUser = manager.FindById(currentUserId);
-                    //Create a cookie so that we can display the extra field[s] without having to query SQL 
-                    //for it on every page request from the ASPNetUsers table
-                    Response.Cookies["userInfo"]["BootstrapTheme"] = currentUser.BootstrapTheme;
-                    Response.Cookies["userInfo"]["FirstName"] = currentUser.FirstName;
-                    Response.Cookies["userInfo"]["Surname"] = currentUser.Surname;
+                    //Create our login cookie to be able to use the custom fields from AspNetUser table
+                    var cookies = new CookieManager();
+                    cookies.WriteCookie(currentUser);
                     return RedirectToLocal(returnUrl);
                 case SignInStatus.LockedOut:
                     return View("Lockout");
@@ -148,8 +149,10 @@ namespace MVCWebProject2.Controllers
             //Owin sign out
             AuthenticationManager.SignOut(DefaultAuthenticationTypes.ApplicationCookie);
             //Delete our custom cookie
-            Response.Cookies["userInfo"].Expires = DateTime.Now.AddDays(-1);
-            //Set the default theme before returning to the home page
+            var cookies = new CookieManager();
+            //Set the default theme 
+            cookies.ClearCookie();
+            //Returning to the home page
             return RedirectToAction("Index", "Home");
         }
 
@@ -245,14 +248,14 @@ namespace MVCWebProject2.Controllers
                         //Here we create a Admin super user who will maintain the website                   
 
                         user = new ApplicationUser();
-                        user.UserName = "brian@zungalow.com";
-                        user.Email = "brian@zungalow.com";
+                        user.UserName = "admin@easyhire.com";
+                        user.Email = "admin@easyhire.com";
                         user.BootstrapTheme = "Standard";
-                        user.FirstName = "Super";
-                        user.Surname = "Admin";
+                        user.FirstName = "Admin";
+                        user.Surname = "Account";
                         user.EmailConfirmed = true;
 
-                        string userPWD = "Webmaster1!";
+                        string userPWD = "Password1!";
 
                         var chkUser = UserManager.Create(user, userPWD);
 
@@ -485,11 +488,17 @@ namespace MVCWebProject2.Controllers
                     }
                     //Now logon our user using the original usermanager record
                     SignInManager.SignIn(loginUser, false, false);
-                    //Create a cookie so that we can display the extra field[s] without having to query SQL 
-                    //for it on every page request from the ASPNetUsers table
-                    Response.Cookies["userInfo"]["BootstrapTheme"] = loginUser.BootstrapTheme;
-                    Response.Cookies["userInfo"]["FirstName"] = loginUser.FirstName;
-                    Response.Cookies["userInfo"]["Surname"] = loginUser.Surname;
+                    //There is no http context yet at this stage of the process so we need to get the details from the ResponseGrant instead
+                    var Grant = SignInManager.AuthenticationManager.AuthenticationResponseGrant;
+                    //Get our authenitcated user from the response grant
+                    var currentUserId = Grant.Identity.GetUserId();
+                    //Set up our user manager
+                    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    //Get the details (whole row from SQL table) for our local user from the SQL user manager
+                    var currentUser = manager.FindById(currentUserId);
+                    //Create our login cookie to be able to use the custom fields from AspNetUser table
+                    var cookies = new CookieManager();
+                    cookies.WriteCookie(currentUser);
                 }
 
             }
@@ -563,14 +572,14 @@ namespace MVCWebProject2.Controllers
                         //Here we create a Admin super user who will maintain the website                   
 
                         var adminUser = new ApplicationUser();
-                        adminUser.UserName = "brian@zungalow.com";
-                        adminUser.Email = "brian@zungalow.com";
+                        adminUser.UserName = "admin@easyhire.com";
+                        adminUser.Email = "admin@easyhire.com.com";
                         adminUser.BootstrapTheme = "Standard";
-                        adminUser.FirstName = "Super";
-                        adminUser.Surname = "Admin";
+                        adminUser.FirstName = "Admin";
+                        adminUser.Surname = "Account";
                         adminUser.EmailConfirmed = true;
 
-                        string userPWD = "Webmaster1!";
+                        string userPWD = "Password1!";
 
                         var chkUser = UserManager.Create(adminUser, userPWD);
 
@@ -580,16 +589,21 @@ namespace MVCWebProject2.Controllers
                             var result1 = UserManager.AddToRole(adminUser.Id, "Super Admin");
                         }
                     }
-                        //Sign the user in now
-                        await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
-                        //Create a cookie so that we can display the extra field[s] without having to query SQL 
-                        //for it on every page request from the ASPNetUsers table
-                        Response.Cookies["userInfo"]["BootstrapTheme"] = model.BootstrapTheme;
-                        Response.Cookies["userInfo"]["FirstName"] = model.FirstName;
-                        Response.Cookies["userInfo"]["Surname"] = model.Surname;
-
-                        return Redirect("~/Manage/ConfirmExternalRegister");
-                    }
+                    //Sign the user in now
+                    await SignInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+                    //There is no http context yet at this stage of the process so we need to get the details from the ResponseGrant instead
+                    var Grant = SignInManager.AuthenticationManager.AuthenticationResponseGrant;
+                    //Get our authenitcated user from the response grant
+                    var currentUserId = Grant.Identity.GetUserId();
+                    //Set up our user manager
+                    var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
+                    //Get the details (whole row from SQL table) for our local user from the SQL user manager
+                    var currentUser = manager.FindById(currentUserId);
+                    //Create our login cookie to be able to use the custom fields from AspNetUser table
+                    var cookies = new CookieManager();
+                    cookies.WriteCookie(currentUser);
+                    return Redirect("~/Manage/ConfirmExternalRegister");
+                }
                AddErrors(result);
             }
             // If we got this far, something failed, redisplay form

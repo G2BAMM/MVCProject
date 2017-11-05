@@ -23,6 +23,7 @@ using Microsoft.Owin.Security;
 using MVCWebProject2.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Net;
+using MVCWebProject2.utilities;
 
 namespace MVCWebProject2.Controllers
 {
@@ -230,10 +231,11 @@ namespace MVCWebProject2.Controllers
                 else
                 //Email or password was not changed 
                 {
-                    //Update the user login details and cookie
-                    Response.Cookies["userInfo"]["BootstrapTheme"] = currentUser.BootstrapTheme;
-                    Response.Cookies["userInfo"]["FirstName"] = currentUser.FirstName;
-                    Response.Cookies["userInfo"]["Surname"] = currentUser.Surname;
+                    
+                    //Uodate our login cookie to be able to use the custom fields from AspNetUser table
+                    var cookies = new CookieManager();
+                    //cookies.context = System.Web.HttpContext.Current;
+                    cookies.WriteCookie(currentUser);
                     //Redirect to confirm update view as the cookie for the theme (if it was changed) will only apply on next http request
                     return Redirect("~/Account/ConfirmUpdate");
                 }

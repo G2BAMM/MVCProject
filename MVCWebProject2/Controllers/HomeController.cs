@@ -18,33 +18,43 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
-using System;
-using System.Web;
+using MVCWebProject2.utilities;
 
 namespace MVCWebProject2.Controllers
 {
     public class HomeController : Controller
     {
-        
+
+        public ActionResult GeneralError()
+        {
+            return View();
+        }
+
+        public ActionResult NotFoundError()
+        {
+            return View();
+        }
+
         [Authorize]
         public async Task<ActionResult> ChooseTheme(string id)
         {
             //Move the string value here for better readabilty
             var bootStrapTheme = id;
-            //Find our local user
+            //Get our authenitcated user from the context
             var currentUserId = User.Identity.GetUserId();
             //Set up our user manager
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-            //Get the details for our local user from the user manager
+            //Get the details (whole row from SQL table) for our local user from the SQL user manager
             var currentUser = manager.FindById(currentUserId);
-            //Change the user's theme to the one chosen
-            currentUser.BootstrapTheme = bootStrapTheme.ToString();
-            //Update the DB and login cookie
-            var result = await manager.UpdateAsync(currentUser);
-            //Update our custom cookie so that we can display the extra field[s] without having to query SQL for it on every page request
-            Response.Cookies["userInfo"]["BootstrapTheme"] = currentUser.BootstrapTheme;
-            Response.Cookies["userInfo"]["FirstName"] = currentUser.FirstName;
-            Response.Cookies["userInfo"]["Surname"] = currentUser.Surname;
+            //Set our new theme for the user's SQL record
+            currentUser.BootstrapTheme = bootStrapTheme;
+            //Update the selected theme to the user's SQL record
+            await manager.UpdateAsync(currentUser);
+
+            //Prepare our cookies for the change
+            var cookies = new CookieManager();
+            //Perform the change now
+            cookies.WriteCookie(currentUser);
             //Make sure we keep the user on the same page they set the theme up on
             return Redirect(Request.UrlReferrer.ToString());
         }
@@ -61,8 +71,12 @@ namespace MVCWebProject2.Controllers
                 
                 ViewBag.LoginDetails = User.IsInRole("User") ? "User" : User.IsInRole("Super Admin") ? "Super Admin" : "Unknown";
                 ViewBag.Theme = Request.Cookies["userInfo"]["BootstrapTheme"];
+                //Cause a deliberate error by division by zero to test the uncaught exception handling by the app
+                //var divisor = 0;
+                //var result = 10 / divisor;
              }
-                return View();
+            
+            return View();
             
         }
 

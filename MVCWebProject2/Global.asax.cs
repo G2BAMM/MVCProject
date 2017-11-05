@@ -1,10 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
+using System.Net.Mail;
+using System.Web.Configuration;
+using System.Net;
 
 namespace MVCWebProject2
 {
@@ -18,25 +18,50 @@ namespace MVCWebProject2
             BundleConfig.RegisterBundles(BundleTable.Bundles);
         }
 
-        protected void Application_OnError()
+        protected void Application_Error(object sender, EventArgs e)
         {
-            /*
-            var error = Server.GetLastError();
-            var code = (error is HttpException) ? (error as HttpException).GetHttpCode() : 500;
+            //Uncomment the code below for live server to trap uncaught errors
+            
+            /* 
+            // Fires when an error occurs
+            MailMessage MyMailer = new MailMessage();
+            SmtpClient client = new SmtpClient
+                {
+                    //client.Port = 587;
+                    Host = WebConfigurationManager.AppSettings["MailHost"],
+                    EnableSsl = true,
+                    //client.Timeout = 10000;
+                    DeliveryMethod = SmtpDeliveryMethod.Network,
+                    UseDefaultCredentials = false,
+                    Credentials = new NetworkCredential(WebConfigurationManager.AppSettings["MailAccount"], WebConfigurationManager.AppSettings["MailPassword"])
+                };
+            Exception objErr = Server.GetLastError().GetBaseException();
+            string Err = "Error Caught in Application_Error event" + System.Environment.NewLine + "Error in: " + Request.Url.ToString() + System.Environment.NewLine + "Error Message: " + objErr.Message.ToString() + System.Environment.NewLine + "Stack Trace:" + objErr.StackTrace.ToString();
 
-            if (code != 404)
-            {
-                // Generate email with error details and send to administrator
-                // I'm using RazorMail which can be downloaded from the Nuget Gallery
-                // I also have an extension method on type Exception that creates a string representation
-                //var email = new RazorMailMessage("Website Error");
-                //email.To.Add("errors@wduffy.co.uk");
-                //email.Templates.Add(error.GetAsHtml(new HttpRequestWrapper(Request)));
-                //Kernel.Get<IRazorMailSender>().Send(email);
-            }
+            MyMailer = new MailMessage();
+            MyMailer.From = new MailAddress("error@easyhire.com");
+            MyMailer.To.Add(new MailAddress("g2bam2012@gmail.com"));
+            MyMailer.Subject = "www.easyhire.com site error";
+            MyMailer.Body = "An error has occurred on easyhire.com\n\nError is displayed below.\n\n" + Err;
+
+            //Now send a mail to the support or dev team
+            client.Send(MyMailer);
+            //Clear the error to prevent an inescapable loop
             Server.ClearError();
-            Response.Redirect("~/error");
+            //Determine which error page to display to the user
+            if (Err.Contains("was not found")) 
+            {
+                //We have a 404 error
+                Response.Redirect("~/Home/NotFoundError");
+            }
+            else
+            {
+                //We have an untrapped or general error
+                Response.Redirect("~/Home/GeneralError");
+            }
             */
         }
+
+
     }
 }

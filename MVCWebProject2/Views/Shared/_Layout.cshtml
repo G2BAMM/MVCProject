@@ -13,6 +13,7 @@
             ViewBag.Theme = Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString();
         }
        <link href="/MVCWebProject/Content/@ThemeManager.SetThemeName(ViewBag.Theme)" rel="stylesheet" />
+    
     }
     else
     {
@@ -36,10 +37,22 @@
             </div>
             <div class="navbar-collapse collapse">
                 <ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                    <li>@Html.ActionLink("Vehicles", "Vehicle", "Home")</li>
+                    @if (User.IsInRole("Super Admin") || User.IsInRole("Admin"))
+                    {
+                        <li>@Html.ActionLink("Admin Home", "Index", "Home", new { Area = "Admin" }, new { })</li>
+                        //<li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("Vehicle Categories", "Index", "VehicleCategory", new { Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Vehicles", "Index", "Vehicle", new { Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Hires", "Index", "Hires", new { Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Users", "Index", "Users", new { Area = "Admin" }, new { })</li>
+                    }
+                    else
+                    {
+                        <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                        <li>@Html.ActionLink("About", "About", "Home")</li>
+                        <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+                        <li>@Html.ActionLink("Vehicles", "Vehicle", "Home")</li>
+                    }
                 </ul>
                 
                 @Html.Partial("_LoginPartial")

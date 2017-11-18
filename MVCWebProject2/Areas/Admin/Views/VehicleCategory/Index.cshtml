@@ -1,0 +1,58 @@
+﻿@model IEnumerable<MVCWebProject2.Areas.Admin.Models.VehicleCategoryListViewModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>Admin Home</h2>
+<p>@ViewBag.Message</p>
+<p>@ViewBag.VehicleTypeID</p>
+<p>
+    @Html.ActionLink("Create New", "Create", new { area = "Admin" }, new { @class = "btn btn-default", @data_toggle = "tooltip", @data_placement = "left", @title = "Add a new vehicle" })
+</p>
+
+<table class="table">
+    <tr>
+        <th>
+            @Html.DisplayNameFor(model => model.VehicleImage)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VehicleClassType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.VehicleType)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastUpdatedBy)
+        </th>
+        <th>
+            @Html.DisplayNameFor(model => model.LastUpdated)
+        </th>
+        <th></th>
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleImage)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleClassType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.VehicleType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdatedBy)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.LastUpdated)
+            </td>
+            <td>
+                @Html.ActionLink("Edit", "Edit", new { id = item.Id }) |
+                @Html.ActionLink("Details", "Details", new { id = item.Id }) |
+                @Html.ActionLink("Delete", "Delete", new { id = item.Id })
+            </td>
+        </tr>
+    }
+</table>

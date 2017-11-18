@@ -39,6 +39,7 @@ namespace MVCWebProject2.utilities
             context.Response.Cookies["userInfo"]["BootstrapTheme"] = currentUser.BootstrapTheme;
             context.Response.Cookies["userInfo"]["FirstName"] = currentUser.FirstName;
             context.Response.Cookies["userInfo"]["Surname"] = currentUser.Surname;
+            context.Response.Cookies["userInfo"]["FullName"] = currentUser.FirstName + " " + currentUser.Surname;
         }
 
         //Clear the cookies after a sign out

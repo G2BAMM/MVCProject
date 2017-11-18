@@ -20,7 +20,6 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.Google;
 using Owin;
 using MVCWebProject2.Models;
-using Microsoft.AspNetCore.Authentication.MicrosoftAccount;
 using Microsoft.Owin.Security.MicrosoftAccount;
 using System.Web.Configuration;
 
@@ -64,6 +63,8 @@ namespace MVCWebProject2
             // This is similar to the RememberMe option when you log in.
             app.UseTwoFactorRememberBrowserCookie(DefaultAuthenticationTypes.TwoFactorRememberBrowserCookie);
 
+
+          
             // Uncomment the following lines to enable logging in with third party login providers
             //app.UseMicrosoftAccountAuthentication(
             //   clientId: "981864f3-6f38-4548-b5a3-cc463dbac14d",
@@ -82,7 +83,7 @@ namespace MVCWebProject2
 
             app.UseMicrosoftAccountAuthentication(mo);
 
-
+            
 
             //app.UseTwitterAuthentication(
             //   consumerKey: "",

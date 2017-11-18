@@ -12,11 +12,6 @@
 '  Date Revised     :                       		    '  
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 */
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Text;
 
 
 namespace MVCWebProject2.utilities
@@ -63,7 +58,15 @@ namespace MVCWebProject2.utilities
             Yeti = 18
         }
 
-
+        public enum DropDownListDefaultSelection
+        {
+            [StringValue("--- Please Select ---")]
+            PleaseSelect = 1,
+            [StringValue("Choose")]
+            Choose = 2,
+            [StringValue("")]
+            Empty = 3
+        }
     }
 
     

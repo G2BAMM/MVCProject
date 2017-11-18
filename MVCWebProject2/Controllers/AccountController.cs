@@ -23,6 +23,9 @@ using MVCWebProject2.Models;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System;
 using MVCWebProject2.utilities;
+using System.Web.Configuration;
+using System.Net;
+using System.Security.Claims;
 
 namespace MVCWebProject2.Controllers
 {
@@ -98,7 +101,8 @@ namespace MVCWebProject2.Controllers
             {
                 return View(model);
             }
-
+            
+            
             // This doesn't count login failures towards account lockout
             // To enable password failures to trigger account lockout, change to shouldLockout: true
             var loginManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
@@ -107,6 +111,7 @@ namespace MVCWebProject2.Controllers
             {
                 if (loginUser.EmailConfirmed == false)
                 {
+                    //This user is attempting to sign in before confirming their email address so advise accordingly
                     ViewBag.AttemptSignIn = true;
                     return View("ConfirmRegistration");
                 }
@@ -118,7 +123,7 @@ namespace MVCWebProject2.Controllers
                 case SignInStatus.Success:
                     //There is no http context yet at this stage of the process so we need to get the details from the ResponseGrant instead
                     var Grant = SignInManager.AuthenticationManager.AuthenticationResponseGrant;
-                    //Get our authenitcated user from the response grant
+                    //Get our authenticated user from the response grant
                     var currentUserId = Grant.Identity.GetUserId();
                     //Set up our user manager
                     var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
@@ -127,7 +132,17 @@ namespace MVCWebProject2.Controllers
                     //Create our login cookie to be able to use the custom fields from AspNetUser table
                     var cookies = new CookieManager();
                     cookies.WriteCookie(currentUser);
-                    return RedirectToLocal(returnUrl);
+                    if(manager.IsInRole(currentUser.Id, "Super Admin") || manager.IsInRole(currentUser.Id, "Admin"))
+                    {
+                        //This is the admin so redirect to the admin home page
+                        return Redirect("~/Admin/Home");
+                    }
+                    else
+                    {
+                        //Not admin users so redirect to the default home page
+                        return RedirectToLocal(returnUrl);
+                    }
+                    
                 case SignInStatus.LockedOut:
                     return View("Lockout");
                 case SignInStatus.RequiresVerification:
@@ -238,35 +253,63 @@ namespace MVCWebProject2.Controllers
                     //Finally sign the user in now
                     //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    if (!roleManager.RoleExists("Super Admin"))
+                    if (!roleManager.RoleExists("Admin"))
                     {
                         // first we create Admin rool    
-                        var role = new IdentityRole();
-                        role.Name = "Super Admin";
-                        roleManager.Create(role);
+                        var adminRole = new IdentityRole();
+                        adminRole.Name = "Admin";
+                        roleManager.Create(adminRole);
 
-                        //Here we create a Admin super user who will maintain the website                   
+                        //Create a Admin who will maintain the website content                   
 
-                        user = new ApplicationUser();
-                        user.UserName = "admin@easyhire.com";
-                        user.Email = "admin@easyhire.com";
-                        user.BootstrapTheme = "Standard";
-                        user.FirstName = "Admin";
-                        user.Surname = "Account";
-                        user.EmailConfirmed = true;
+                        var adminUser = new ApplicationUser();
+                        adminUser.UserName = "admin@easyhire.com";
+                        adminUser.Email = "admin@easyhire.com";
+                        adminUser.BootstrapTheme = "Standard";
+                        adminUser.FirstName = "Admin";
+                        adminUser.Surname = "Account";
+                        adminUser.EmailConfirmed = true;
 
-                        string userPWD = "Password1!";
+                        string adminPWD = "Password1!";
 
-                        var chkUser = UserManager.Create(user, userPWD);
+                        var chkUser = UserManager.Create(adminUser, adminPWD);
 
                         //Add default User to Role Admin    
                         if (chkUser.Succeeded)
                         {
-                            var result1 = UserManager.AddToRole(user.Id, "Super Admin");
+                            var result1 = UserManager.AddToRole(adminUser.Id, "Admin");
 
                         }
-                    }
 
+                        if (!roleManager.RoleExists("Super Admin"))
+                        {
+                            //Create a Super Admin role    
+                            var superAdminRole = new IdentityRole();
+                            superAdminRole.Name = "Super Admin";
+                            roleManager.Create(superAdminRole);
+
+                            //Create a Super Admin super user who will maintain the website security                   
+
+                            var superAdminuser = new ApplicationUser();
+                            superAdminuser.UserName = WebConfigurationManager.AppSettings["MailAdminAccount"];
+                            superAdminuser.Email = WebConfigurationManager.AppSettings["MailAdminAccount"];
+                            superAdminuser.BootstrapTheme = "Standard";
+                            superAdminuser.FirstName = "Super Admin";
+                            superAdminuser.Surname = "Account";
+                            superAdminuser.EmailConfirmed = true;
+
+                            string superAdminPWD = WebConfigurationManager.AppSettings["MailAdminPassword"]; ;
+
+                            var chkSuperUser = UserManager.Create(superAdminuser, superAdminPWD);
+
+                            //Add default User to Role Admin    
+                            if (chkUser.Succeeded)
+                            {
+                                var result2 = UserManager.AddToRole(superAdminuser.Id, "Super Admin");
+
+                            }
+                        }
+                    }
 
                     // For more information on how to enable account confirmation and password reset please visit https://go.microsoft.com/fwlink/?LinkID=320771
                     // Send an email with this link
@@ -562,31 +605,61 @@ namespace MVCWebProject2.Controllers
                     //Finally sign the user in now
                     //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
-                    if (!roleManager.RoleExists("Super Admin"))
+                    if (!roleManager.RoleExists("Admin"))
                     {
-                        // first we create Admin rool    
-                        var role = new IdentityRole();
-                        role.Name = "Super Admin";
-                        roleManager.Create(role);
+                        //Create an Admin role   
+                        var adminRole = new IdentityRole();
+                        adminRole.Name = "Admin";
+                        roleManager.Create(adminRole);
 
-                        //Here we create a Admin super user who will maintain the website                   
+                        //Create an Admin who will maintain the website content                   
 
                         var adminUser = new ApplicationUser();
                         adminUser.UserName = "admin@easyhire.com";
-                        adminUser.Email = "admin@easyhire.com.com";
+                        adminUser.Email = "admin@easyhire.com";
                         adminUser.BootstrapTheme = "Standard";
                         adminUser.FirstName = "Admin";
                         adminUser.Surname = "Account";
                         adminUser.EmailConfirmed = true;
 
-                        string userPWD = "Password1!";
+                        string adminPWD = "Password1!";
 
-                        var chkUser = UserManager.Create(adminUser, userPWD);
+                        var chkUser = UserManager.Create(adminUser, adminPWD);
 
                         //Add default User to Role Admin    
                         if (chkUser.Succeeded)
                         {
-                            var result1 = UserManager.AddToRole(adminUser.Id, "Super Admin");
+                            var result1 = UserManager.AddToRole(adminUser.Id, "Admin");
+
+                        }
+
+                        if (!roleManager.RoleExists("Super Admin"))
+                        {
+                            //Create a Super Admin role    
+                            var superAdminRole = new IdentityRole();
+                            superAdminRole.Name = "Super Admin";
+                            roleManager.Create(superAdminRole);
+
+                            //Create a Super Admin super user who will maintain the website security                   
+
+                            var superAdminUser = new ApplicationUser();
+                            superAdminUser.UserName = WebConfigurationManager.AppSettings["MailAdminAccount"];
+                            superAdminUser.Email = WebConfigurationManager.AppSettings["MailAdminAccount"];
+                            superAdminUser.BootstrapTheme = "Standard";
+                            superAdminUser.FirstName = "Super Admin";
+                            superAdminUser.Surname = "Account";
+                            superAdminUser.EmailConfirmed = true;
+
+                            string superAdminPWD = WebConfigurationManager.AppSettings["MailAdminPassword"]; ;
+
+                            var chkSuperUser = UserManager.Create(superAdminUser, superAdminPWD);
+
+                            //Add default User to Role Admin    
+                            if (chkUser.Succeeded)
+                            {
+                                var result2 = UserManager.AddToRole(superAdminUser.Id, "Super Admin");
+
+                            }
                         }
                     }
                     //Sign the user in now

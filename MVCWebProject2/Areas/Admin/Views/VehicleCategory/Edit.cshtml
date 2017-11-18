@@ -1,0 +1,169 @@
+﻿@using MVCWebProject2.utilities
+@model MVCWebProject2.Areas.Admin.Models.VehicleCategoryViewModel
+@{
+    ViewBag.Title = "Edit";
+}
+
+<h2>Edit</h2>
+<p>Vehicle type ID: - @ViewBag.VehicleTypeID</p>
+@using (Html.BeginForm("Edit", "VehicleCategory", new { area = "Admin" }, FormMethod.Post, new { id = "editForm" }))
+{
+    @Html.AntiForgeryToken()
+    
+    <div class="form-horizontal">
+        <h4>Vehicle Category</h4>
+        <hr />
+        @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+        @Html.HiddenFor(model => model.Id)
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VehicleClassType, htmlAttributes: new { @class = "control-label col-md-2" } )
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                       <span class="glyphicon-pencil" aria="hidden"></span>
+                    </span>
+                    @Html.EditorFor(model => model.VehicleClassType, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.VehicleClassType, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.VehicleTypeID, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon-pencil" aria="hidden"></span>
+                    </span>
+                    @Html.DropDownListFor(model => model.VehicleTypeID, Model.VehicleType, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control" })
+                </div>
+                @Html.ValidationMessageFor(model => model.VehicleTypeID, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.ImageId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <img src="~/resources/google_signin.png" onclick="alert('Image was clicked'); document.getElementById('editForm').submit();" id="Vehicle" class="img-thumbnail" width="315" height="600" />
+                    @Html.HiddenFor(model => model.ImageId)
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.DailyRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        &pound;&nbsp;
+                    </span>
+                    @Html.EditorFor(model => model.DailyRate,  new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.DailyRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WeeklyRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        &pound;&nbsp;
+                    </span>
+                    @Html.EditorFor(model => model.WeeklyRate, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.WeeklyRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.WeekendRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        &pound;&nbsp;
+                    </span>
+                    @Html.EditorFor(model => model.WeekendRate, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.WeekendRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.MonthlyRate, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        &pound;&nbsp;
+                    </span>
+                    @Html.EditorFor(model => model.MonthlyRate, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.MonthlyRate, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.NumberOfSeats, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon-pencil" aria="hidden"></span>
+                    </span>
+                    @Html.EditorFor(model => model.NumberOfSeats, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.NumberOfSeats, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.BasicDescription, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon-pencil"></span>
+                    </span>
+                    @Html.TextAreaFor(model => model.BasicDescription, new { @class = "form-control", @rows = "4", @columns = "40" })
+                </div>
+                @Html.ValidationMessageFor(model => model.BasicDescription, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            @Html.LabelFor(model => model.LuggageCapacity, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <div class="input-group">
+                    <span class="input-group-addon">
+                        <span class="glyphicon-pencil" aria="hidden"></span>
+                    </span>
+                    @Html.EditorFor(model => model.LuggageCapacity, new { htmlAttributes = new { @class = "form-control" } })
+                </div>
+                @Html.ValidationMessageFor(model => model.LuggageCapacity, "", new { @class = "text-danger" })
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-md-offset-2 col-md-10">
+                <input type="submit" value="Save" class="btn btn-default" />
+            </div>
+        </div>
+    </div>
+}
+
+<div>
+    @Html.ActionLink("Back to List", "Index")
+</div>
+
+<div class="modal">
+    <div class="modal-header">
+        <p>This is the header</p>
+        
+    </div>
+    <div class="modal-body">
+        <p>Everyhting we need goes in here</p>
+    </div>
+</div>
+
+<!-- Insert modal code here for image gallery -->
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}

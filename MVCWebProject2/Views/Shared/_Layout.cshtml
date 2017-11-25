@@ -6,6 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - EasyHire</title>
+    <link href="//netdna.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     @if (Request.IsAuthenticated)
     {
         if (Request.Cookies["userInfo"] != null)
@@ -19,9 +20,11 @@
     {
         <link href="/MVCWebProject/Content/bootstrap.css" rel="stylesheet" />
     }
+    
     @Styles.Render("~/Content/css")
     @Scripts.Render("~/bundles/modernizr")
-    
+    @Scripts.Render("~/bundles/jquery")
+    @Scripts.Render("~/bundles/bootstrap")
 </head>
 <body>
     
@@ -45,6 +48,7 @@
                         <li>@Html.ActionLink("Vehicles", "Index", "Vehicle", new { Area = "Admin" }, new { })</li>
                         <li>@Html.ActionLink("Hires", "Index", "Hires", new { Area = "Admin" }, new { })</li>
                         <li>@Html.ActionLink("Users", "Index", "Users", new { Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Gallery", "Index", "Gallery", new { Area = "Admin" }, new { })</li>
                     }
                     else
                     {
@@ -67,8 +71,7 @@
         </footer>
     </div>
 
-    @Scripts.Render("~/bundles/jquery")
-    @Scripts.Render("~/bundles/bootstrap")
+   
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         $(document).ready(function () {

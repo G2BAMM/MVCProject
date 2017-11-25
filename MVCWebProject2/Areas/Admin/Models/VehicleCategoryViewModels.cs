@@ -29,9 +29,9 @@ namespace MVCWebProject2.Areas.Admin.Models
         public string VehicleType { get; set; }
         [Display(Name = "Category Image")]
         public string VehicleImage { get; set; }
-        [Display(Name = "Last Updated By")]
+        [Display(Name = "Updated By")]
         public string LastUpdatedBy { get; set; }
-        [Display(Name = "Last Updated")]
+        [Display(Name = "Updated")]
         public string LastUpdated { get; set; }
     }
 
@@ -80,6 +80,12 @@ namespace MVCWebProject2.Areas.Admin.Models
     {
         public string Id { get; set; }
         public string Display { get; set; }
+    }
+
+    public class VehicleCategoryImageGalleryList
+    {
+        public int Id { get; set; }
+        public string ImageName { get; set; }
     }
 
 }

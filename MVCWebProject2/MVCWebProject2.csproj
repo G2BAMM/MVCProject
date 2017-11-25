@@ -309,6 +309,7 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\Startup.Auth.cs" />
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
+    <Compile Include="Areas\Admin\Controllers\GalleryController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
     <Compile Include="App_Data\BLL\VehicleCategoriesBLL.cs" />
     <Compile Include="Areas\Admin\Controllers\VehicleCategoryController.cs" />
@@ -354,6 +355,8 @@
     <Content Include="Global.asax" />
     <Content Include="Content\Site.css" />
     <Content Include="Content\bootstrap-united.css" />
+    <Content Include="images\fiat_500.png" />
+    <Content Include="images\seat.png" />
     <Content Include="resources\btn_google_signin_dark_disabled_web.png" />
     <Content Include="resources\btn_google_signin_dark_focus_web.png" />
     <Content Include="resources\Google_signin.png" />
@@ -375,6 +378,7 @@
     <Content Include="Areas\Admin\Views\VehicleCategory\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleCategory\AddUpdateConfirm.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Error.cshtml" />
+    <Content Include="Areas\Admin\Views\Gallery\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomScripts.js" />
@@ -434,7 +438,7 @@
     <Content Include="Views\Home\GeneralError.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="images\" />
+    <Folder Include="images\uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

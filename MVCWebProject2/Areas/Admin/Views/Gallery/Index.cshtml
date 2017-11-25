@@ -1,0 +1,92 @@
+﻿
+@{
+    ViewBag.Title = "Index";
+}
+
+
+
+@using (Html.BeginForm("AddNewImage", "Gallery", null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+{
+    @Html.AntiForgeryToken()
+    <h2>Gallery Uploader</h2>
+    <div class="form-group">
+        <label class="control-label col-md-2" for="file">Upload:</label>
+        <div class="col-md-10">
+            <div class="pull-right">
+                <button type="submit" value="Upload File" class="btn btn-primary">Upload</button><br clear="all" />
+            </div>
+            <input type="file" name="fileUpload" required />
+        </div>
+     </div>
+}
+<p></p>
+<div>
+    <span style="color:red" id="ErrorMessage">@ViewBag.ErrorMessage</span>
+    <span style="color:green" id="Message">@ViewBag.Message</span>
+    <script>
+        $('#Message').delay(1000).fadeOut('slow');
+        $('#ErrorMessage').delay(3000).fadeOut('slow');
+    </script>
+</div>
+
+
+<hr />
+<h2>Image Gallery</h2>
+<h4>Vehicle Category Image Gallery</h4>
+<table class="table table-striped table-hover ">
+    <thead>
+        <tr>
+            <th>#</th>
+            <th>Column heading</th>
+            <th>Column heading</th>
+            <th>Column heading</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>1</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+        <tr>
+            <td>2</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+        <tr class="info">
+            <td>3</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+        <tr class="success">
+            <td>4</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+        <tr class="danger">
+            <td>5</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+        <tr class="warning">
+            <td>6</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+        <tr class="active">
+            <td>7</td>
+            <td>Column content</td>
+            <td>Column content</td>
+            <td>Column content</td>
+        </tr>
+    </tbody>
+</table> 
+
+
+

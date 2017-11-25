@@ -17,11 +17,20 @@
         @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
+            @Html.LabelFor(model => model.ImageId, htmlAttributes: new { @class = "control-label col-md-2" })
+            <div class="col-md-10">
+                <img src="~/images/fiat_500.png" id="Vehicle" class="img-responsive img-rounded" width="315" height="315" data-toggle="modal" data-target="#myModal" />
+                <p>Click image to change or update.</p>
+                @Html.HiddenFor(model => model.ImageId)
+            </div>
+        </div>
+
+        <div class="form-group">
             @Html.LabelFor(model => model.VehicleClassType, htmlAttributes: new { @class = "control-label col-md-2" } )
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                       <span class="glyphicon-pencil" aria="hidden"></span>
+                       <i class="glyphicon-pencil" aria="hidden"></i>
                     </span>
                     @Html.EditorFor(model => model.VehicleClassType, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -34,7 +43,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <span class="glyphicon-pencil" aria="hidden"></span>
+                        <i class="glyphicon-pencil" aria="hidden"></i>
                     </span>
                     @Html.DropDownListFor(model => model.VehicleTypeID, Model.VehicleType, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control" })
                 </div>
@@ -43,19 +52,11 @@
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.ImageId, htmlAttributes: new { @class = "control-label col-md-2" })
-            <div class="col-md-10">
-                <img src="~/resources/google_signin.png" onclick="alert('Image was clicked'); document.getElementById('editForm').submit();" id="Vehicle" class="img-thumbnail" width="315" height="600" />
-                    @Html.HiddenFor(model => model.ImageId)
-            </div>
-        </div>
-
-        <div class="form-group">
             @Html.LabelFor(model => model.DailyRate, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        &pound;&nbsp;
+                        <i class="glyphicon glyphicon-gbp"></i>
                     </span>
                     @Html.EditorFor(model => model.DailyRate,  new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -68,7 +69,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        &pound;&nbsp;
+                        <i class="glyphicon glyphicon-gbp"></i>
                     </span>
                     @Html.EditorFor(model => model.WeeklyRate, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -81,7 +82,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        &pound;&nbsp;
+                        <i class="glyphicon glyphicon-gbp"></i>
                     </span>
                     @Html.EditorFor(model => model.WeekendRate, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -94,7 +95,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        &pound;&nbsp;
+                        <i class="glyphicon glyphicon-gbp"></i>
                     </span>
                     @Html.EditorFor(model => model.MonthlyRate, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -107,7 +108,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <span class="glyphicon-pencil" aria="hidden"></span>
+                        <i class="glyphicon-pencil" aria="hidden"></i>
                     </span>
                     @Html.EditorFor(model => model.NumberOfSeats, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -120,7 +121,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <span class="glyphicon-pencil"></span>
+                        <i class="glyphicon-pencil"></i>
                     </span>
                     @Html.TextAreaFor(model => model.BasicDescription, new { @class = "form-control", @rows = "4", @columns = "40" })
                 </div>
@@ -133,7 +134,7 @@
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                        <span class="glyphicon-pencil" aria="hidden"></span>
+                        <i class="glyphicon-pencil" aria="hidden"></i>
                     </span>
                     @Html.EditorFor(model => model.LuggageCapacity, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -153,17 +154,96 @@
     @Html.ActionLink("Back to List", "Index")
 </div>
 
-<div class="modal">
-    <div class="modal-header">
-        <p>This is the header</p>
-        
-    </div>
-    <div class="modal-body">
-        <p>Everyhting we need goes in here</p>
+<!-- Insert modal code here for image gallery -->
+<div class="modal fade" id="myModal">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title text-center"><i class="glyphicon glyphicon-picture glyphicon-align-center"></i> Image Gallery <i class="glyphicon glyphicon-picture glyphicon-align-center"></i></h1>
+            </div>
+            <div class="modal-body">
+                <p>Click on an image below to select it for the current vehicle group.</p>
+                <div class="row">
+                    <div class="col-sm-3"><a href="~/Admin/VehicleCategory/Edit/1"><img src="~/images/fiat_500.png" class="img-responsive img-thumbnail img-circle" height="100" /></a></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-responsive img-thumbnail img-circle" height="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-responsive img-thumbnail img-circle" height="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-responsive img-thumbnail img-circle" height="100" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail img-circle" height="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail img-circle" height="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail img-circle" height="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail img-circle" height="100" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                </div>
+                <div class="row">
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/fiat_500.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                    <div class="col-sm-3"><img src="~/images/seat.png" class="img-rounded img-responsive img-thumbnail" height="100" width="100" /></div>
+                </div>
+            </div>
+            <div align="center">
+                <ul class="pagination pagination-sm">
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">&laquo;</a>
+                    </li>
+                    <li class="page-item active">
+                        <a class="page-link" href="#">1</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">2</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">3</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">4</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">5</a>
+                    </li>
+                    <li class="page-item">
+                        <a class="page-link" href="#">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
     </div>
 </div>
 
-<!-- Insert modal code here for image gallery -->
+
+
+
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }

@@ -37,7 +37,7 @@ namespace MVCWebProject2.BLL
                 {
                     Id = (int)row["id"],
                     VehicleImage = row["ImageName"].ToString(),
-                    VehicleClassType = row["VehicleClassType"].ToString().Substring(0, 25) + "...",
+                    VehicleClassType = row["VehicleClassType"].ToString().Length < 20 ? row["VehicleClassType"].ToString() : row["VehicleClassType"].ToString().Substring(0, 20) + "...",
                     VehicleType = row["VehicleType"].ToString(),
                     LastUpdatedBy = row["LastUpdatedBy"].ToString(),
                     LastUpdated = Convert.ToDateTime(row["LastUpdated"]).ToString("dd MMM yyyy")

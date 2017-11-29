@@ -1,9 +1,7 @@
 ﻿using MVCWebProject2.BLL;
 using System.Web.Mvc;
 using MVCWebProject2.Areas.Admin.Models;
-using System.Collections.Generic;
 using System;
-using System.Linq;
 
 namespace MVCWebProject2.Areas.Admin.Controllers
 {

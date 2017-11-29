@@ -302,7 +302,9 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="App_Data\DAL\VehicleCategoriesDAL.cs" />
+    <Compile Include="BLL\GalleryBLL.cs" />
+    <Compile Include="DAL\GalleryDAL.cs" />
+    <Compile Include="DAL\VehicleCategoriesDAL.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
     <Compile Include="App_Start\IdentityConfig.cs" />
@@ -311,7 +313,7 @@
     <Compile Include="Areas\Admin\AdminAreaRegistration.cs" />
     <Compile Include="Areas\Admin\Controllers\GalleryController.cs" />
     <Compile Include="Areas\Admin\Controllers\HomeController.cs" />
-    <Compile Include="App_Data\BLL\VehicleCategoriesBLL.cs" />
+    <Compile Include="BLL\VehicleCategoriesBLL.cs" />
     <Compile Include="Areas\Admin\Controllers\VehicleCategoryController.cs" />
     <Compile Include="Areas\Admin\Models\VehicleCategoryViewModels.cs" />
     <Compile Include="Controllers\AccountController.cs" />
@@ -357,6 +359,18 @@
     <Content Include="Content\bootstrap-united.css" />
     <Content Include="images\fiat_500.png" />
     <Content Include="images\seat.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_00_broken-car-vehicle-vintage.jpg" />
+    <Content Include="images\uploads\26_11_2017_11_25_00_broken-car-vehicle-vintage_small.jpg" />
+    <Content Include="images\uploads\26_11_2017_11_25_00_broken-car-vehicle-vintage_thumb.jpg" />
+    <Content Include="images\uploads\26_11_2017_11_25_06_fiat_500.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_06_fiat_500_small.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_06_fiat_500_thumb.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_13_corsa.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_13_corsa_small.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_13_corsa_thumb.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture_small.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture_thumb.png" />
     <Content Include="resources\btn_google_signin_dark_disabled_web.png" />
     <Content Include="resources\btn_google_signin_dark_focus_web.png" />
     <Content Include="resources\Google_signin.png" />
@@ -438,7 +452,7 @@
     <Content Include="Views\Home\GeneralError.cshtml" />
   </ItemGroup>
   <ItemGroup>
-    <Folder Include="images\uploads\" />
+    <Folder Include="App_Data\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

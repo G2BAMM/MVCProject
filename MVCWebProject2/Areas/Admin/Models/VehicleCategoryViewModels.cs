@@ -23,9 +23,9 @@ namespace MVCWebProject2.Areas.Admin.Models
     public class VehicleCategoryListViewModel
     {
         public int Id { get; set; }
-        [Display(Name = "Category Description")]
+        [Display(Name = "Vehicle Description")]
         public string VehicleClassType { get; set; }
-        [Display(Name = "Category Type")]
+        [Display(Name = "Vehicle Name")]
         public string VehicleType { get; set; }
         [Display(Name = "Category Image")]
         public string VehicleImage { get; set; }
@@ -39,8 +39,8 @@ namespace MVCWebProject2.Areas.Admin.Models
     {
         public int? Id { get; set; }
         [Required]
-        [Display(Name = "Vehicle Class")]
-        [StringLength(50, ErrorMessage = "Max is 50 chars for vehicle type.", MinimumLength = 1)]
+        [Display(Name = "Vehicle Name")]
+        [StringLength(50, ErrorMessage = "Max is 50 chars for vehicle name.", MinimumLength = 1)]
         public string VehicleClassType { get; set; }
         public SelectList VehicleType { get; set; }
         [Required]
@@ -64,10 +64,10 @@ namespace MVCWebProject2.Areas.Admin.Models
         public decimal MonthlyRate { get; set; }
         [Required]
         [Display(Name = "No of Seats")]
-        [Range(2, 25, ErrorMessage = "Must have at least 2 seats and not more than 16")]
+        [Range(2, 16, ErrorMessage = "Must have at least 2 seats and not more than 16")]
         public int NumberOfSeats { get; set; }
         [Required]
-        [Display(Name = "Features")]
+        [Display(Name = "Vehicle Features")]
         [StringLength(250, ErrorMessage = "Max is 250 chars for vehicle description.", MinimumLength = 1)]
         public string BasicDescription { get; set; }
         [Required]

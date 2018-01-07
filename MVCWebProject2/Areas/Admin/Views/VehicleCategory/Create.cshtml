@@ -1,36 +1,39 @@
 ﻿@using MVCWebProject2.utilities
 @model MVCWebProject2.Areas.Admin.Models.VehicleCategoryViewModel
+
 @{
-    ViewBag.Title = "Edit";
+    ViewBag.Title = "Create";
+    
 }
 
-<h2>Edit</h2>
-<p>Vehicle type ID: - @ViewBag.VehicleTypeID</p>
-@using (Html.BeginForm("Edit", "VehicleCategory", new { area = "Admin" }, FormMethod.Post, new { id = "editForm" }))
+<h2>Add New Vehicle Group</h2>
+
+@using (Html.BeginForm()) 
 {
     @Html.AntiForgeryToken()
-    
+
     <div class="form-horizontal">
         <h4>Vehicle Category</h4>
         <hr />
         @Html.ValidationSummary(true, "", new { @class = "text-danger" })
-        @Html.HiddenFor(model => model.Id)
 
         <div class="form-group">
             @Html.LabelFor(model => model.ImageId, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
-                <img src="~/images/uploads/@Model.ImageName" id="Vehicle" class="img-responsive img-rounded" width="315" height="315" data-toggle="modal" data-target="#myModal" />
+                <img src="~/images/seat.png" id="Vehicle" class="img-responsive img-rounded" width="315" height="315" data-toggle="modal" data-target="#myModal" />
                 <p>Click image to change or update.</p>
-                @Html.HiddenFor(model => model.ImageId)
+                @Html.HiddenFor(model => model.ImageId) 
+                @Html.ValidationMessageFor(model => model.ImageId, "", new { @class = "text-danger" })
             </div>
+           
         </div>
 
         <div class="form-group">
-            @Html.LabelFor(model => model.VehicleClassType, htmlAttributes: new { @class = "control-label col-md-2" } )
+            @Html.LabelFor(model => model.VehicleClassType, htmlAttributes: new { @class = "control-label col-md-2" })
             <div class="col-md-10">
                 <div class="input-group">
                     <span class="input-group-addon">
-                       <i class="glyphicon-pencil" aria="hidden"></i>
+                        <i class="glyphicon-pencil" aria="hidden"></i>
                     </span>
                     @Html.EditorFor(model => model.VehicleClassType, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
@@ -58,7 +61,7 @@
                     <span class="input-group-addon">
                         <i class="glyphicon glyphicon-gbp"></i>
                     </span>
-                    @Html.EditorFor(model => model.DailyRate,  new { htmlAttributes = new { @class = "form-control" } })
+                    @Html.EditorFor(model => model.DailyRate, new { htmlAttributes = new { @class = "form-control" } })
                 </div>
                 @Html.ValidationMessageFor(model => model.DailyRate, "", new { @class = "text-danger" })
             </div>
@@ -175,7 +178,7 @@
                 <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
             </div>
         </div>
-        
+
     </div>
 </div>
 <script>
@@ -184,10 +187,12 @@
         LoadGallery('thumbNails', 1, 8, 'pager');
     });
 
-    
+
 </script>
 
 
 @section Scripts {
     @Scripts.Render("~/bundles/jqueryval")
 }
+
+

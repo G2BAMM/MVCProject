@@ -1,6 +1,6 @@
 ﻿/*
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'  Class Title      : VehiclesDAL.cs                    '
+'  Class Title      : VehicleCategoriesDAL.cs           '
 '  Description      : Manages the data transport to/from'
 '                     data source                       '
 '  Author           : Brian McAulay                     '
@@ -32,9 +32,7 @@ namespace MVCWebProject2.DAL
         #endregion
 
         #region GetVehicleList
-
         // **************** GET VEHICLE CATEGORY LIST *********************
-
         public static DataTable GetVehicleCategoryList()
         {
             using (SqlConnection conn = new SqlConnection(connString))
@@ -44,59 +42,60 @@ namespace MVCWebProject2.DAL
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter sd = new SqlDataAdapter(cmd);
                     dt = new DataTable();
-                    try
-                    {
-                        conn.Open();
-                        sd.Fill(dt);
-                        conn.Close();
-                    }
-                    catch (SqlException ex)
-                    {
-                        var error = ex.InnerException;
-                    }
+                    conn.Open();
+                    sd.Fill(dt);
+                    conn.Close();
                 }
             }
             return dt;
         }
-
         #endregion
 
         #region AddNewVehicleCategory
-        /*
         // **************** ADD NEW VEHICLE CATEGORY *********************
-        public bool AddVehicleCategory(VehicleCategoryListViewModel smodel)
+        public static int AddNewVehicleCategory(string VehicleClassType,
+                                          int VehicleTypeId,
+                                          int ImageId,
+                                          decimal DailyRate,
+                                          decimal WeeklyRate,
+                                          decimal WeekendRate,
+                                          decimal MonthlyRate,
+                                          int NumberOfSeats,
+                                          string BasicDescription,
+                                          int LuggageCapacity,
+                                          string UpdatedBy)
+
         {
-            var returnValue = false;
-            CreateConnection();
-            SqlCommand cmd = new SqlCommand("AddNewStudent", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@Name", smodel.Name);
-            cmd.Parameters.AddWithValue("@City", smodel.City);
-            cmd.Parameters.AddWithValue("@Address", smodel.Address);
-            try
-            { 
-                conn.Open();
-                cmd.ExecuteNonQuery();
-                conn.Close();
-            }
-            catch 
+            using (SqlConnection conn = new SqlConnection(connString))
             {
-                throw new InvalidOperationException("A database problem was encountered!");
-            }
-            finally
-            {
-                DisposeConnection();
-            }
+                var returnValue = 0;
+                using (SqlCommand cmd = new SqlCommand("AddNewVehicleCategory", conn))
+                {
 
-            return returnValue;
-            
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@VehicleClassType", VehicleClassType);
+                    cmd.Parameters.AddWithValue("@VehicleTypeId", VehicleTypeId);
+                    cmd.Parameters.AddWithValue("@ImageId", ImageId);
+                    cmd.Parameters.AddWithValue("@DailyRate", DailyRate);
+                    cmd.Parameters.AddWithValue("@WeeklyRate", WeeklyRate);
+                    cmd.Parameters.AddWithValue("@WeekendRate", WeekendRate);
+                    cmd.Parameters.AddWithValue("@MonthlyRate", MonthlyRate);
+                    cmd.Parameters.AddWithValue("@NumberOfSeats", NumberOfSeats);
+                    cmd.Parameters.AddWithValue("@BasicDescription", BasicDescription);
+                    cmd.Parameters.AddWithValue("@LuggageCapacity", LuggageCapacity);
+                    cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
+                    cmd.Parameters.Add(new SqlParameter("@Return_Value", SqlDbType.Int, 4, ParameterDirection.Output, false, 10, 0, "", DataRowVersion.Proposed, returnValue));
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    returnValue = (int)cmd.Parameters["@Return_Value"].Value;
+                    conn.Close();
+                    return returnValue;
+                }
+            }
         }
-        */
         #endregion
 
         #region GetVehicleCategoryDetails
-        
         // ********** VIEW VEHICLE CATEGORY DETAILS ********************
         public static DataSet GetVehicleCategory(int CategoryId)
         {
@@ -108,26 +107,36 @@ namespace MVCWebProject2.DAL
                     cmd.Parameters.AddWithValue("@Id", CategoryId);
                     SqlDataAdapter sd = new SqlDataAdapter(cmd);
                     ds = new DataSet();
-                    try
-                    {
-                        conn.Open();
-                        sd.Fill(ds, "VehicleCategory");
-                        conn.Close();
-                    }
-                    catch (SqlException ex)
-                    {
-                        var error = ex.InnerException;
-                    }
+                    conn.Open();
+                    sd.Fill(ds, "VehicleCategory");
+                    conn.Close();
                 }
             }
             return ds;
         }
-        
+        #endregion
 
+        #region GetVehicleTypeList
+        // ********************** GET VEHICLE TYPES LIST *******************
+        public static DataTable GetVehicleTypes()
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                using (SqlCommand cmd = new SqlCommand("GetVehicleTypes", conn))
+                {
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    SqlDataAdapter sd = new SqlDataAdapter(cmd);
+                    dt = new DataTable();
+                    conn.Open();
+                    sd.Fill(dt);
+                    conn.Close();
+                }
+            }
+            return dt;
+        }
         #endregion
 
         #region UpdateVehicleCategory
-        
         // ***************** UPDATE VEHICLE CATEGORY DETAILS *********************
         public static void UpdateVehicleCategory(int Id,
                                           string VehicleClassType,
@@ -141,14 +150,13 @@ namespace MVCWebProject2.DAL
                                           string BasicDescription,
                                           int LuggageCapacity,
                                           string UpdatedBy)
-    
+
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
                 var returnValue = 0;
                 using (SqlCommand cmd = new SqlCommand("UpdateVehicleCategory", conn))
                 {
-
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@Id", Id);
                     cmd.Parameters.AddWithValue("@VehicleClassType", VehicleClassType);
@@ -163,23 +171,14 @@ namespace MVCWebProject2.DAL
                     cmd.Parameters.AddWithValue("@LuggageCapacity", LuggageCapacity);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
                     cmd.Parameters.Add(new SqlParameter("@Return_Value", SqlDbType.Int, 4, ParameterDirection.Output, false, 10, 0, "", DataRowVersion.Proposed, returnValue));
-                    try
-                    {
-                        conn.Open();
-                        cmd.ExecuteNonQuery();
-                        conn.Close();
-                        //if((int)cmd.Parameters["@Return_Value"].Value == 1)
-                        //    returnValue = true;
-                    }
-
-                    catch (SqlException ex)
-                    {
-                        var error = ex.InnerException;
-                    }
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    conn.Close();
+                    //if((int)cmd.Parameters["@Return_Value"].Value == 1)
+                    //    returnValue = true;
                 }
             }
         }
-        
         #endregion
 
         #region DeleteVehicleCategory
@@ -189,10 +188,10 @@ namespace MVCWebProject2.DAL
         {
             var returnValue = false;
             CreateConnection();
-            SqlCommand cmd = new SqlCommand("DeleteStudent", conn);
+            SqlCommand cmd = new SqlCommand("DeleteVehicleGroup", conn);
             cmd.CommandType = CommandType.StoredProcedure;
 
-            cmd.Parameters.AddWithValue("@StdId", id);
+            cmd.Parameters.AddWithValue("@id", id);
             try
             {
                 conn.Open();

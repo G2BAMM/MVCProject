@@ -67,6 +67,42 @@ namespace MVCWebProject2.utilities
             [StringValue("")]
             Empty = 3
         }
+
+        public enum VehicleMenuManager
+        {
+            [StringValue("Fuel Type")]
+            FuelType = 5,
+            [StringValue("Manufacturers")]
+            Manufacturer = 10,
+            [StringValue("Models")]
+            VehicleModel = 15,
+            [StringValue("Vehicle Status")]
+            Status = 20,
+            [StringValue("Transmission Type")]
+            TransmissionType = 25,
+            [StringValue("Vehicles")]
+            Vehicle = 1,
+            [StringValue("Vehicle Type")]
+            VehicleType = 30
+        }
+
+        public enum VehicleDataSetManager
+        {
+            [StringValue("Vehicle")]
+            Vehicle = 5,
+            [StringValue("Manufacturer")]
+            Manufacturer = 10,
+            [StringValue("Fuel Type")]
+            FuelType = 15,
+            [StringValue("Transmission Type")]
+            TransmissionType = 20,
+            [StringValue("Vehicle Model")]
+            VehicleModel = 25,
+            [StringValue("Vehicle Status")]
+            VehicleStatus = 30,
+            [StringValue("Vehicle Group")]
+            VehicleGroup = 35
+        }
     }
 
     

@@ -27,11 +27,19 @@ namespace MVCWebProject2.Controllers
 
         public ActionResult GeneralError()
         {
+            //Prevent users from seeing the actual error on any page or section/service
+            //and instead redirect them to a general error message view
+            //Mail will be sent to site admin highlighting the error and the cause/line no etc
+            //See Global.asax for details
             return View();
         }
 
         public ActionResult NotFoundError()
         {
+            //Possible bad link or user manipulating the url in the browser
+            //and instead redirect them to a general 404 error message view
+            //Mail will be sent to site admin highlighting the error and the cause/line no etc
+            //See Global.asax for details
             return View();
         }
 

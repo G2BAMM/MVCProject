@@ -19,6 +19,7 @@ using MVCWebProject2.DAL;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.IO;
 using System.Web.Mvc;
 
 namespace MVCWebProject2.BLL
@@ -35,7 +36,7 @@ namespace MVCWebProject2.BLL
             {
                 VehicleCategoryListViewModel myListItems = new VehicleCategoryListViewModel
                 {
-                    Id = (int)row["id"],
+                    Id = (int)row["CategoryID"],
                     VehicleImage = row["ImageName"].ToString(),
                     VehicleClassType = row["VehicleClassType"].ToString().Length < 20 ? row["VehicleClassType"].ToString() : row["VehicleClassType"].ToString().Substring(0, 20) + "...",
                     VehicleType = row["VehicleType"].ToString(),
@@ -73,6 +74,7 @@ namespace MVCWebProject2.BLL
             model.VehicleTypeID = (int)row["VehicleTypeID"];
             model.WeekendRate = (decimal)row["WeekendRate"];
             model.WeeklyRate = (decimal)row["WeeklyRate"];
+            model.ImageName = row["ImageName"].ToString().Replace(Path.GetExtension(row["ImageName"].ToString()).ToLower(), "_thumb") + Path.GetExtension(row["ImageName"].ToString()).ToLower().Trim();
 
             //Get the second table in order to populate the related dropdown list
             dt = ds.Tables[1];
@@ -81,7 +83,7 @@ namespace MVCWebProject2.BLL
             {
                 list.Add(new VehicleTypeList
                 {
-                    Id = dataRow["Id"].ToString(),
+                    Id = (int)dataRow["Id"],
                     Display = dataRow["VehicleType"].ToString()
                 });
             }
@@ -115,7 +117,47 @@ namespace MVCWebProject2.BLL
 
         #endregion
 
+        #region AddNewRecord
 
+        public static int AddNewVehicleCategory(VehicleCategoryViewModel model, string UpdatedBy)
+        {
+            var result = VehicleCategoriesDAL.AddNewVehicleCategory(model.VehicleClassType,
+                                                              model.VehicleTypeID,
+                                                              model.ImageId,
+                                                              model.DailyRate,
+                                                              model.WeeklyRate,
+                                                              model.WeekendRate,
+                                                              model.MonthlyRate,
+                                                              model.NumberOfSeats,
+                                                              model.BasicDescription,
+                                                              model.LuggageCapacity,
+                                                              UpdatedBy);
+
+
+
+            return result;
+        }
+
+        #endregion
+        
+        #region GetVehicleList
+        public static VehicleCategoryViewModel GetVehicleList()
+        {
+            DataTable dt = VehicleCategoriesDAL.GetVehicleTypes();
+            var model = new VehicleCategoryViewModel();
+            var list = new List<VehicleTypeList>();
+            foreach (DataRow dataRow in dt.Rows)
+            {
+                list.Add(new VehicleTypeList
+                {
+                    Id = (int)dataRow["Id"],
+                    Display = dataRow["VehicleType"].ToString()
+                });
+            }
+            model.VehicleType = new SelectList(list, "id", "Display");
+            return model;
+        }
+        #endregion
 
     }
 }

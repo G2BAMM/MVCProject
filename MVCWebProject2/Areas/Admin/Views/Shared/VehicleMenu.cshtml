@@ -1,0 +1,17 @@
+﻿@using MVCWebProject2.utilities
+<div class="list-group">
+
+    @foreach (Constants.VehicleMenuManager item in Enum.GetValues(typeof(Constants.VehicleMenuManager)))
+    {
+        if (ViewBag.SelectedMenuItem == item.GetStringValue())
+        {
+
+            @Html.ActionLink(item.GetStringValue(), "Index", item.ToString(), new { Area = "Admin" }, new { @class = "list-group-item active" })
+        }
+        else
+        {
+            @Html.ActionLink(item.GetStringValue(), "Index", item.ToString(), new { Area = "Admin" }, new { @class = "list-group-item" })
+        }
+    }
+</div>
+

@@ -1,0 +1,130 @@
+﻿@using MVCWebProject2.utilities
+@model MVCWebProject2.Areas.Admin.Models.VehicleViewModel
+
+@{
+    ViewBag.Title = "Edit";
+
+}
+
+<h2>Edit</h2>
+
+@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+    <div class="row">
+        <div class="col-md-3">
+            @Html.Partial("VehicleMenu")
+        </div>
+        <div class="col-md-9">
+            <div class="form-horizontal">
+                <h4>Update Vehicle</h4>
+                <hr />
+                @Html.ValidationSummary(true, "", new { @class = "text-danger" })
+                @Html.HiddenFor(model => model.VehicleID)
+                @Html.HiddenFor(model => model.StatusID)
+                <div class="form-group">
+                    @Html.LabelFor(model => model.RegistrationNumber, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.EditorFor(model => model.RegistrationNumber, new { htmlAttributes = new { @class = "form-control" } })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.RegistrationNumber, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ManufacturerID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.DropDownListFor(model => model.ManufacturerID, Model.VehicleManufacturerList, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control", @onchange= "RebuildMenu('ModelID');" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ManufacturerID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.ModelID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.DropDownListFor(model => model.ModelID, Model.VehicleModelList, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.ModelID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.StatusID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.DropDownListFor(model => model.StatusID, Model.VehicleStatusList, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control", @disabled = "disabled" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.StatusID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    @Html.LabelFor(model => model.TransmissionID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.DropDownListFor(model => model.TransmissionID, Model.VehicleTransmissionList, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.TransmissionID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.FuelID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.DropDownListFor(model => model.FuelID, Model.VehicleFuelList, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.FuelID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+                <div class="form-group">
+                    @Html.LabelFor(model => model.VehicleGroupID, htmlAttributes: new { @class = "control-label col-md-2" })
+                    <div class="col-md-10">
+                        <div class="input-group">
+                            <span class="input-group-addon">
+                                <i class="glyphicon-pencil" aria="hidden"></i>
+                            </span>
+                            @Html.DropDownListFor(model => model.VehicleGroupID, Model.VehicleGroupList, Constants.DropDownListDefaultSelection.PleaseSelect.GetStringValue(), new { @class = "form-control" })
+                        </div>
+                        @Html.ValidationMessageFor(model => model.VehicleGroupID, "", new { @class = "text-danger" })
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <div class="col-md-offset-2 col-md-10">
+                        <input type="submit" value="Save" class="btn btn-default" />
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+}
+
+    <div>
+        @Html.ActionLink("Back to List", "Index")
+    </div>
+
+
+
+
+

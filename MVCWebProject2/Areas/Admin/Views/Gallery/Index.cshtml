@@ -1,31 +1,34 @@
-﻿
+﻿@model IEnumerable<MVCWebProject2.Areas.Admin.Models.GalleryListViewModel>
+
 @{
     ViewBag.Title = "Index";
 }
 
-
-
-@using (Html.BeginForm("AddNewImage", "Gallery", null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline" }))
+@using (Html.BeginForm("AddNewImage", "Gallery", null, FormMethod.Post, new { enctype = "multipart/form-data", @class = "form-inline", @id="uploader" }))
 {
     @Html.AntiForgeryToken()
     <h2>Gallery Uploader</h2>
-    <div class="form-group">
-        <label class="control-label col-md-2" for="file">Upload:</label>
-        <div class="col-md-10">
-            <div class="pull-right">
-                <button type="submit" value="Upload File" class="btn btn-primary">Upload</button><br clear="all" />
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-md-2" for="file">Upload:</label>
+            <div class="col-md-6">
+                <input type="file" name="fileUpload" id="fileUpload" required />
             </div>
-            <input type="file" name="fileUpload" required />
+            <div class="col-md-4"><button value="Upload File" class="btn btn-primary" onclick="StartProgress('progress');">Upload</button></div>
         </div>
-     </div>
+    </div>
 }
 <p></p>
+<div class="progress progress-striped active" id="progress" style="display: none; width: 50%;">
+    <div class="progress-bar" style="width: 100%">Processing...</div>
+</div>
+
 <div>
-    <span style="color:red" id="ErrorMessage">@ViewBag.ErrorMessage</span>
-    <span style="color:green" id="Message">@ViewBag.Message</span>
+    <span style="color:red" id="ErrorMessage">@TempData["ErrorMessage"]</span>
+    <span style="color:green" id="Message">@TempData["Message"]</span>
     <script>
         $('#Message').delay(1000).fadeOut('slow');
-        $('#ErrorMessage').delay(3000).fadeOut('slow');
+        $('#ErrorMessage').delay(4000).fadeOut('slow');
     </script>
 </div>
 
@@ -33,60 +36,132 @@
 <hr />
 <h2>Image Gallery</h2>
 <h4>Vehicle Category Image Gallery</h4>
-<table class="table table-striped table-hover ">
-    <thead>
-        <tr>
-            <th>#</th>
-            <th>Column heading</th>
-            <th>Column heading</th>
-            <th>Column heading</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>1</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-        <tr>
-            <td>2</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-        <tr class="info">
-            <td>3</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-        <tr class="success">
-            <td>4</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-        <tr class="danger">
-            <td>5</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-        <tr class="warning">
-            <td>6</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-        <tr class="active">
-            <td>7</td>
-            <td>Column content</td>
-            <td>Column content</td>
-            <td>Column content</td>
-        </tr>
-    </tbody>
-</table> 
+
+<div>
+    <ul class="pagination pagination-sm">
+        <li class="page-item">
+            @if (ViewBag.CurrentPage == 1)
+            {
+                //Only need a blank link here as this is the first page being displayed
+                <a class="page-link" href="#">&laquo;</a>
+            }
+            else
+            {
+                //Generate the back link to go back to page 1 as we are viewing a page greater than 1
+                @Html.Raw(Html.ActionLink("LinkText",
+                                 "Index",
+                                 "Gallery",
+                                  new { Area = "Admin", PageNumber = 1, NumberOfItems = @ViewBag.NumberOfItems },
+                                  new { @class = "page-link" }).ToHtmlString().Replace("LinkText", "&laquo;"))
+
+            }
+        </li>
+         
+
+           @for (var PageNumber = 1; PageNumber <= ViewBag.NumberOfPages; PageNumber++)
+            {
+                if (PageNumber == ViewBag.CurrentPage)
+                {
+                    //This is the current page so just generate a blank link to prevent uneccessary loading of page again
+                    <li class="page-item active">
+                        <a class="page-link" href="#">@PageNumber</a>
+                    </li>
+            }
+                else
+                {
+                    //This is a page link that is not the one we are viewing so generate a link to it
+                    <li class="page-item">
+                        @Html.ActionLink(@PageNumber.ToString(), 
+                                        "Index", 
+                                        "Gallery",  
+                                        new { Area = "Admin", PageNumber = @PageNumber.ToString(), NumberOfItems = @ViewBag.NumberOfItems}, 
+                                        new { @class = "page-link"})
+                </li>
+                }
+            }
+            
+            
+            <li class="page-item">
+                @if (ViewBag.NumberOfPages == ViewBag.CurrentPage)
+                {
+                    //Only need a blank link here as this is the last page being displayed
+                    <a class="page-link" href="#">&raquo;</a>
+                }
+                else
+                {
+                    //Generate the forward link to advance to last page as we are viewing a page less than the total number of pages
+                    @Html.Raw(Html.ActionLink("LinkText",
+                                 "Index",
+                                 "Gallery",
+                                  new { Area = "Admin", PageNumber = ViewBag.NumberOfPages, NumberOfItems = @ViewBag.NumberOfItems },
+                                  new { @class = "page-link" }).ToHtmlString().Replace("LinkText", "&raquo;"))
+                }
+            </li>
+        
+    </ul>
+</div>
+    <p>Current Items Per Page: @ViewBag.NumberOfItems</p>
+<div class="btn-group">
+    
+    <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown">Items Per Page</a>
+    <a href="#" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+    <ul class="dropdown-menu">
+        @for (var Items = 4; Items <= 16; Items += 4)
+        {
+            <li>@Html.ActionLink(Items + " Items", "Index", "Gallery", new {Area = "Admin", PageNumber = 1, NumberOfItems = Items }, null)</li>
+        }
+    </ul>
+</div>
+
+    <div class="modal-body">
+        <div class="row">
+            @foreach (var item in Model)
+            {
+                <div class="col-sm-3">
+                    <img src="~/images/uploads/@item.ThumbnailImage" class="img-responsive img-thumbnail" />
+                    <br /><br />
+                    @if (item.Disabled)
+                    {
+                        //This image is assigned to a vehicle category so we can't delete it until its been unrelated
+                        <button disabled="disabled" class="btn btn-danger btn-sm">Delete</button>
+                    }
+                    else
+                    {
+                        //No related data applies to this image so it can safely be removed
+                        @Html.ActionLink("Delete", "Delete", "Gallery",
+                                    new { Area = "Admin", id = item.ImageId },
+                                    new { @class = "btn btn-danger btn-sm",
+                                    @onclick = "return confirm('Are you sure you wish to delete this image?\\n\\nThis will revert the gallery to page 1 with 8 items to avoid confusion after deletion.');"
+                                    })
+                    }
+
+                    <p></p>
+                </div>
+            }
+        </div>
+    </div>
+
+        
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

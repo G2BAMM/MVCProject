@@ -302,8 +302,25 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Areas\Admin\Controllers\FuelTypeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\ManufacturerController.cs" />
+    <Compile Include="Areas\Admin\Controllers\TransmissionTypeController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VehicleController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VehicleModelController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VehicleTypeController.cs" />
+    <Compile Include="Areas\Admin\Models\GalleryViewModels.cs" />
+    <Compile Include="Areas\Admin\Models\VehicleViewModels.cs" />
+    <Compile Include="BLL\FuelTypeBLL.cs" />
     <Compile Include="BLL\GalleryBLL.cs" />
+    <Compile Include="BLL\ManufacturerBLL.cs" />
+    <Compile Include="BLL\TransmissionTypeBLL.cs" />
+    <Compile Include="BLL\VehicleBLL.cs" />
+    <Compile Include="BLL\VehicleModelBLL.cs" />
+    <Compile Include="BLL\VehicleTypeBLL.cs" />
+    <Compile Include="DAL\FuelTypeDAL.cs" />
     <Compile Include="DAL\GalleryDAL.cs" />
+    <Compile Include="DAL\ManufacturerDAL.cs" />
+    <Compile Include="DAL\TransmissionTypeDAL.cs" />
     <Compile Include="DAL\VehicleCategoriesDAL.cs" />
     <Compile Include="App_Start\BundleConfig.cs" />
     <Compile Include="App_Start\FilterConfig.cs" />
@@ -319,6 +336,9 @@
     <Compile Include="Controllers\AccountController.cs" />
     <Compile Include="Controllers\HomeController.cs" />
     <Compile Include="Controllers\ManageController.cs" />
+    <Compile Include="DAL\VehicleDAL.cs" />
+    <Compile Include="DAL\VehicleModelDAL.cs" />
+    <Compile Include="DAL\VehicleTypeDAL.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
     </Compile>
@@ -359,18 +379,6 @@
     <Content Include="Content\bootstrap-united.css" />
     <Content Include="images\fiat_500.png" />
     <Content Include="images\seat.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_00_broken-car-vehicle-vintage.jpg" />
-    <Content Include="images\uploads\26_11_2017_11_25_00_broken-car-vehicle-vintage_small.jpg" />
-    <Content Include="images\uploads\26_11_2017_11_25_00_broken-car-vehicle-vintage_thumb.jpg" />
-    <Content Include="images\uploads\26_11_2017_11_25_06_fiat_500.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_06_fiat_500_small.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_06_fiat_500_thumb.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_13_corsa.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_13_corsa_small.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_13_corsa_thumb.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture_small.png" />
-    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture_thumb.png" />
     <Content Include="resources\btn_google_signin_dark_disabled_web.png" />
     <Content Include="resources\btn_google_signin_dark_focus_web.png" />
     <Content Include="resources\Google_signin.png" />
@@ -393,6 +401,27 @@
     <Content Include="Areas\Admin\Views\VehicleCategory\AddUpdateConfirm.cshtml" />
     <Content Include="Areas\Admin\Views\Home\Error.cshtml" />
     <Content Include="Areas\Admin\Views\Gallery\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleCategory\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Shared\VehicleMenu.cshtml" />
+    <Content Include="Areas\Admin\Views\Vehicle\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Vehicle\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Vehicle\AddUpdateConfirm.cshtml" />
+    <Content Include="Areas\Admin\Views\FuelType\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\FuelType\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\FuelType\AddUpdateConfirm.cshtml" />
+    <Content Include="Areas\Admin\Views\FuelType\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturer\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturer\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturer\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\Manufacturer\AddUpdateConfirm.cshtml" />
+    <Content Include="Areas\Admin\Views\TransmissionType\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\TransmissionType\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\TransmissionType\AddUpdateConfirm.cshtml" />
+    <Content Include="Areas\Admin\Views\TransmissionType\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleType\Index.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleType\Edit.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleType\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleType\AddUpdateConfirm.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomScripts.js" />
@@ -453,6 +482,8 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
+    <Folder Include="Areas\Admin\Views\VehicleModel\" />
+    <Folder Include="images\uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

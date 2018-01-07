@@ -46,7 +46,9 @@ namespace MVCWebProject2.Areas.Admin.Models
         [Required]
         [Display(Name = "Vehicle Type")]
         public int VehicleTypeID { get; set; }
+        [Required]
         [Display(Name = "Vehicle Image")]
+        [Range(1, int.MaxValue, ErrorMessage = "Please select an image for the vehicle group")]
         public int ImageId { get; set; }
         public string ImageName { get; set; }
         [DataType(DataType.Currency)]
@@ -76,9 +78,12 @@ namespace MVCWebProject2.Areas.Admin.Models
         public int LuggageCapacity { get; set; }
     }
 
-    public class VehicleTypeList
+    public class VehicleTypeList 
     {
-        public string Id { get; set; }
+        public int Id { get; set; }
+        [Required]
+        [Display(Name = "Vehicle Type")]
+        [StringLength(20, ErrorMessage = "20 chars max allowed for vehicle type")]
         public string Display { get; set; }
     }
 

@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - EasyHire</title>
-    <link href="//netdna.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
     @if (Request.IsAuthenticated)
     {
         if (Request.Cookies["userInfo"] != null)
@@ -45,10 +45,10 @@
                         <li>@Html.ActionLink("Admin Home", "Index", "Home", new { Area = "Admin" }, new { })</li>
                         //<li>@Html.ActionLink("Home", "Index", "Home")</li>
                         <li>@Html.ActionLink("Vehicle Categories", "Index", "VehicleCategory", new { Area = "Admin" }, new { })</li>
-                        <li>@Html.ActionLink("Vehicles", "Index", "Vehicle", new { Area = "Admin" }, new { })</li>
-                        <li>@Html.ActionLink("Hires", "Index", "Hires", new { Area = "Admin" }, new { })</li>
-                        <li>@Html.ActionLink("Users", "Index", "Users", new { Area = "Admin" }, new { })</li>
-                        <li>@Html.ActionLink("Gallery", "Index", "Gallery", new { Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Vehicles", "Index", "Vehicle", new { id = "", other = "", Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Hires", "Index", "Hires", new { id = "", other = "", Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Users", "Index", "Users", new { id = "", other = "", Area = "Admin" }, new { })</li>
+                        <li>@Html.ActionLink("Gallery", "", "Gallery", new { PageNumber = "1", NumberOfItems = "8", Area = "Admin" }, new { })</li>
                     }
                     else
                     {

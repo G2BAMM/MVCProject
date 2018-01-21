@@ -50,7 +50,7 @@ namespace MVCWebProject2.BLL
 
         #endregion
 
-        #region GetMainRecord
+        #region GetVehicleCatagoryDataSet
         //Get the individual vehicle category record
         public static VehicleCategoryViewModel GetVehicleCategoryDataset(int CategoryID)
         {
@@ -83,7 +83,7 @@ namespace MVCWebProject2.BLL
             {
                 list.Add(new VehicleTypeList
                 {
-                    Id = (int)dataRow["Id"],
+                    Id = (int)dataRow["VehicleTypeID"],
                     Display = dataRow["VehicleType"].ToString()
                 });
             }
@@ -150,7 +150,7 @@ namespace MVCWebProject2.BLL
             {
                 list.Add(new VehicleTypeList
                 {
-                    Id = (int)dataRow["Id"],
+                    Id = (int)dataRow["VehicleTypeID"],
                     Display = dataRow["VehicleType"].ToString()
                 });
             }

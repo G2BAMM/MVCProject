@@ -57,6 +57,9 @@ namespace MVCWebProject2.BLL
             var model = new VehicleViewModel();
             foreach (DataTable dt in ds.Tables)
             {
+                if (dt.Rows.Count == 0)
+                    //There was no record found at row zero so we can run on to the next table
+                    continue;
                 var row = dt.Rows[0];
                 if (row["TableName"].ToString() == Constants.VehicleDataSetManager.Vehicle.ToString())
                 {
@@ -112,6 +115,20 @@ namespace MVCWebProject2.BLL
         {
             var result = VehicleDAL.UpdateVehicle(VehicleID, ModelID, RegistrationNumber, StatusID, TransmissionID, VehicleGroupID, FuelID, UpdatedBy);
             return result;
+        }
+        #endregion
+
+        #region AddNewVehicle
+        public static void AddNewVehicle(int ModelID,
+                                    string RegistrationNumber,
+                                    int statusID,
+                                    int TransmissionID,
+                                    int VehicleGroupID,
+                                    int FuelID,
+                                    string UpdatedBy,
+                                    out int returnValue)
+        {
+            VehicleDAL.AddNewVehicle(ModelID, RegistrationNumber, statusID, TransmissionID, VehicleGroupID, FuelID, UpdatedBy, out returnValue);
         }
         #endregion
 

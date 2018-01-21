@@ -11,6 +11,7 @@ namespace MVCWebProject2
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
                         "~/Scripts/jquery-{version}.js",
+                        //"~/Scripts/jquery-ui.js",
                         "~/Scripts/CustomScripts.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(

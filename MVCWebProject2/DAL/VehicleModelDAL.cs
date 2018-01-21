@@ -28,7 +28,6 @@ namespace MVCWebProject2.DAL
         #region SQLConnectionSetUp
         private static string connString = ConfigurationManager.ConnectionStrings["DefaultConnection"].ToString();
         private static DataTable dt;
-        private static DataSet ds;
         #endregion
 
         #region GetModelListByManufacturer
@@ -51,5 +50,64 @@ namespace MVCWebProject2.DAL
             return dt;
         }
         #endregion
+
+        #region AddNewModel
+        // **************** ADD NEW MODEL  *********************
+        public static void AddNewModel(int ManufacturerID,
+                                        string ModelName,
+                                        string UpdatedBy,
+                                        out int returnValue)
+
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                //var returnValue = 0;
+                using (SqlCommand cmd = new SqlCommand("AddNewModel", conn))
+                {
+                    returnValue = 0;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ManufacturerID", ManufacturerID);
+                    cmd.Parameters.AddWithValue("@ModelName", ModelName);
+                    cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
+                    cmd.Parameters.Add(new SqlParameter("@Return_Value", SqlDbType.Int, 4, ParameterDirection.Output, false, 10, 0, "", DataRowVersion.Proposed, returnValue));
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    returnValue = (int)cmd.Parameters["@Return_Value"].Value;
+                    conn.Close();
+
+                }
+            }
+        }
+        #endregion
+
+        #region UpdateModel
+        // **************** UPDATE MODEL  *********************
+        public static void UpdateModel(int ModelID,
+                                        string ModelName,
+                                        string UpdatedBy,
+                                        out int returnValue)
+
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                //var returnValue = 0;
+                using (SqlCommand cmd = new SqlCommand("UpdateModel", conn))
+                {
+                    returnValue = 0;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@ModelID", ModelID);
+                    cmd.Parameters.AddWithValue("@ModelName", ModelName);
+                    cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
+                    cmd.Parameters.Add(new SqlParameter("@Return_Value", SqlDbType.Int, 4, ParameterDirection.Output, false, 10, 0, "", DataRowVersion.Proposed, returnValue));
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    returnValue = (int)cmd.Parameters["@Return_Value"].Value;
+                    conn.Close();
+
+                }
+            }
+        }
+        #endregion
+
     }
 }

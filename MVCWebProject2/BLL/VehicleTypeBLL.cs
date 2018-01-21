@@ -10,6 +10,7 @@ namespace MVCWebProject2.BLL
 {
     public class VehicleTypeBLL
     {
+        #region GetVehicleTypeList
         public static IEnumerable<VehicleTypeList> GetVehicleTypeList()
         {
             var VehicleTypeList = new List<VehicleTypeList>();
@@ -24,7 +25,9 @@ namespace MVCWebProject2.BLL
             }
             return VehicleTypeList;
         }
+        #endregion
 
+        #region GetVehicleType
         public static VehicleTypeList GetVehicleType(int VehicleTypeID)
         {
             var model = new VehicleTypeList();
@@ -34,15 +37,20 @@ namespace MVCWebProject2.BLL
             model.Display = dr["VehicleType"].ToString();
             return model;
         }
+        #endregion
 
+        #region UpdateVehicleType
         public static void UpdateVehicleType(VehicleTypeList model, string UpdatedBy)
         {
             VehicleTypeDAL.UpdateVehicleType(model.Id, model.Display, UpdatedBy);
         }
+        #endregion
 
+        #region AddVehicleType
         public static void AddVehicleType(VehicleTypeList model, string UpdatedBy, out int returnValue)
         {
             VehicleTypeDAL.AddVehicleType(model.Display, UpdatedBy, out returnValue);
         }
+        #endregion
     }
 }

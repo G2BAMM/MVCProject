@@ -12,6 +12,7 @@
 '  Date Revised     :                       		    '  
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 */
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -19,6 +20,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 {
     public class VehicleListViewModel
     {
+        //Shows the list of vehicles on the home page
         public int VehicleId { get; set; }
         [Display(Name = "Make")]
         public string Manufacturer { get; set; }
@@ -32,8 +34,17 @@ namespace MVCWebProject2.Areas.Admin.Models
         public string VehicleStatus { get; set; }
     }
 
+    public class VehicleModelListView
+    {
+        //This is used to build the accordion headers and panes
+        public int? ManufacturerId { get; set; }
+        public string Manufacturer { get; set; }
+        public List<VehicleModelList> modelList { get; set; }
+    }
+
     public class VehicleViewModel
     {
+        //The vehicle form add/update form
         public int? VehicleID { get; set; }
         public SelectList VehicleManufacturerList { get; set; }
         public SelectList VehicleModelList { get; set; }
@@ -77,6 +88,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleModelList
     {
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
         public int Id { get; set; }
         [Required]
         [Display(Name = "Model Name")]
@@ -86,6 +98,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleStatusList
     {
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
         public int Id { get; set; }
         [Required]
         [Display(Name = "Hire Status")]
@@ -95,6 +108,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleTransmissionList
     {
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
         public int Id { get; set; }
         [Required]
         [Display(Name = "Transmission Type")]
@@ -104,12 +118,14 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleGroupList
     {
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
         public int Id { get; set; }
         public string Display { get; set; }
     }
 
     public class VehicleFuelList
     {
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
         public int Id { get; set; }
         [Required]
         [Display(Name = "Fuel Type")]
@@ -119,6 +135,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class ModelByManufacturerList
     {
+        //Used to build paired dropdown lists for JSON Objects on the vehicle form
         public SelectList VehicleManufacturerList { get; set; }
         public SelectList VehicleModelList { get; set; }
     }

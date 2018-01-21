@@ -1,4 +1,19 @@
-﻿using System;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Class Title      : VehicleTypeDAL.cs                 '
+'  Description      : Manages the data transport to/from'
+'                     data source                       '
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 10 Jan 2018                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using System;
 using System.Collections.Generic;
 using System.Configuration;
 using System.Data;

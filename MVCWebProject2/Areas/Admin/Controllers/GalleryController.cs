@@ -24,6 +24,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
     [Authorize(Roles = ("Super Admin, Admin"))]
     public class GalleryController : Controller
     {
+        #region Index(GALLERY LIST)
         // GET: Admin/Gallery
         public ActionResult Index(int? PageNumber, int? NumberOfItems)
         {
@@ -56,13 +57,17 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             ViewBag.CurrentPage = _pageNumber;
             return View(model);
         }
+        #endregion
 
+        #region AddNewImage(GET)
         // GET: Admin/AddNewImage
         public ActionResult AddNewImage()
         {
             return RedirectToAction("Index/1/8");
         }
+        #endregion
 
+        #region AddNewImage(POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult AddNewImage(HttpPostedFileBase fileUpload)
@@ -91,9 +96,11 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             } 
             return View("Index/1/8");
         }
-        
-       // GET: Admin/Delete/Id
-       public ActionResult Delete(int id)
+        #endregion
+
+        #region DeleteImage
+        // GET: Admin/Delete/Id
+        public ActionResult Delete(int id)
         {
             try
             {
@@ -109,9 +116,10 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             }
             
         }
+        #endregion
 
+        #region GetJSONGallery(Pop Up Version)
         // GET: Admin/JSONGallery
-        [AllowAnonymous]
         public string GetJsonGallery(int? PageNumber, int? NumberOfItems)
         {
             //Set the page number and number of items from the request
@@ -128,5 +136,6 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             //Send JSON response to calling object
             return JsonConvert.SerializeObject(JsonString);
         }
+        #endregion
     }
 }

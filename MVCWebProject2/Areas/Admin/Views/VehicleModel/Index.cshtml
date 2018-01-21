@@ -1,0 +1,80 @@
+﻿@model IEnumerable<MVCWebProject2.Areas.Admin.Models.VehicleModelListView>
+@{
+    ViewBag.Title = "Index";
+    var loopCount = 1;
+    var collapseIn = "";
+}
+
+<h2>Manage Models</h2>
+
+<div class="row">
+    <div class="col-md-3">
+        @Html.Partial("VehicleMenu")
+    </div>
+    <div class="col-md-9">
+        <div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+            <!-- Loop here-->
+            @foreach (var item in Model)
+            {
+                <!-- Accordion Header -->
+                <div class="panel panel-default">
+                    <div class="panel-heading" role="tab" id="heading_@item.ManufacturerId" data-toggle="collapse" data-parent="#accordion" href="#collapse_@item.ManufacturerId">
+                        <h4 class="panel-title" id="@item.ManufacturerId">
+                            <a role="button" class="my-button" id="@item.ManufacturerId" data-toggle="collapse" data-parent="#accordion" href="#collapse_@item.ManufacturerId" aria-expanded="true" aria-controls="collapse_@item.ManufacturerId">
+                                @item.Manufacturer
+                            </a>
+                        </h4>
+                    </div>
+                    <!-- Accordion Pane -->
+                    <div id="collapse_@item.ManufacturerId" class="panel-collapse collapse @collapseIn" role="tabpanel" aria-labelledby="heading_@item.ManufacturerId">
+                        <div class="panel-body">
+                            <div id="main_content_@item.ManufacturerId">
+                                <p>Click the model name below to edit &amp; update, or click the 'Add New Model' button to add a new model.</p>
+                                <ol id="ModelList_@item.ManufacturerId">
+                                    @foreach (var modelName in item.modelList)
+                                    {
+                                        <li><a href="JavaScript:OpenForm(@item.ManufacturerId, @modelName.Id, '@modelName.Display');" id="@modelName.Id">@modelName.Display</a></li>
+                                    }
+                                </ol>
+                                <p><button class="btn btn-default" onclick="ClearModelName(@item.ManufacturerId);">Add New Model</button></p>
+                            </div>
+                            <div id="panel_form_@item.ManufacturerId" style="display: none;">
+                                <div class="form-horizontal">
+                                    <h4>Manage Model Name</h4>
+                                    <hr />
+                                    <div class="form-group">
+                                        <label class="control-label col-md-2" for="Display">Model</label>
+                                        <div class="col-md-10">
+                                            <div class="input-group">
+                                                <span class="input-group-addon">
+                                                    <i class="glyphicon-pencil" aria="hidden"></i>
+                                                </span>
+                                                <input class="form-control text-box single-line" data-val="true" data-val-length="50 chars max allowed for model" data-val-length-max="50" data-val-required="The model field is required." id="Display_@item.ManufacturerId" name="Display_@item.ManufacturerId" type="text" />
+
+                                            </div>
+                                            <p>
+                                                <span class="text-danger" id="error_@item.ManufacturerId" />
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div class="form-group">
+                                        <div class="col-md-offset-2 col-md-10">
+                                            <button class="btn btn-default" onclick="SaveModel();">Save</button> <button onclick="SwitchPanelBody(@item.ManufacturerId);" class="btn btn-primary">Cancel</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                loopCount += 1;
+            }
+            <!-- End Loop Here -->
+        </div>
+    </div>
+</div>
+@section Scripts {
+    @Scripts.Render("~/bundles/jqueryval")
+}
+
+

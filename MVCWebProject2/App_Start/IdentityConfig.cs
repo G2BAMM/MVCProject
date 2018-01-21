@@ -1,6 +1,6 @@
 ﻿/*
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'  Page Title       : IdentityConfig.cs                 '
+'  Class Title      : IdentityConfig.cs                 '
 '  Description      : Manages custom account logic      ' 
 '  Author           : Brian McAulay                     '
 '  Creation Date    : 23 Oct 2017                       '

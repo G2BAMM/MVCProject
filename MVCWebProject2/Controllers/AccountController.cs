@@ -1,6 +1,6 @@
 ﻿/*
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'  Page Title       : AccountController.cs              '
+'  Class Title      : AccountController.cs              '
 '  Description      : Manages custom account logic      ' 
 '  Author           : Brian McAulay                     '
 '  Creation Date    : 17 Oct 2017                       '
@@ -250,12 +250,10 @@ namespace MVCWebProject2.Controllers
                     //Add the user to the 'User' role                   
                     UserManager.AddToRole(user.Id, "User");
 
-                    //Finally sign the user in now
-                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
-
+                    
                     if (!roleManager.RoleExists("Admin"))
                     {
-                        // first we create Admin rool    
+                        // first we create Admin role    
                         var adminRole = new IdentityRole();
                         adminRole.Name = "Admin";
                         roleManager.Create(adminRole);
@@ -278,7 +276,6 @@ namespace MVCWebProject2.Controllers
                         if (chkUser.Succeeded)
                         {
                             var result1 = UserManager.AddToRole(adminUser.Id, "Admin");
-
                         }
 
                         if (!roleManager.RoleExists("Super Admin"))
@@ -507,13 +504,13 @@ namespace MVCWebProject2.Controllers
             {
                 //User was found on the 3rd party system so process the custom login now
                 var loginManager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
-                //Check to see if a local user account exists with this email address
+                //Check to see if we got a valid email address back from the external provider 
                 if (loginInfo.Email == null || loginInfo.Email == "")
                 {
                     return RedirectToAction("ExternalLoginFailure");
                 }
+                //Do we have a local user account already for this user?
                 var loginUser = await loginManager.FindByEmailAsync(loginInfo.Email);
-                //Local user account was found
                 if (loginUser != null)
                 {
                     //Local user account was found so we can log them in now
@@ -545,11 +542,8 @@ namespace MVCWebProject2.Controllers
                 }
 
             }
-            
-            // Sign in the user with this external login provider if the user already has a login
-            //var result = await SignInManager.ExternalSignInAsync(loginInfo, isPersistent: false);
-            
-            
+
+            //Now determine how we handle this user after logging in
             switch (result)
             {
                 case SignInStatus.Success:
@@ -602,9 +596,8 @@ namespace MVCWebProject2.Controllers
                     //Add the user to the 'User' role                   
                     UserManager.AddToRole(user.Id, "User");
 
-                    //Finally sign the user in now
-                    //await SignInManager.SignInAsync(user, isPersistent:false, rememberBrowser:false);
 
+                    //If this is our first ever user we need to create some roles and admin accounts too to make the admin side work
                     if (!roleManager.RoleExists("Admin"))
                     {
                         //Create an Admin role   
@@ -641,7 +634,6 @@ namespace MVCWebProject2.Controllers
                             roleManager.Create(superAdminRole);
 
                             //Create a Super Admin super user who will maintain the website security                   
-
                             var superAdminUser = new ApplicationUser();
                             superAdminUser.UserName = WebConfigurationManager.AppSettings["MailAdminAccount"];
                             superAdminUser.Email = WebConfigurationManager.AppSettings["MailAdminAccount"];

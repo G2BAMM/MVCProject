@@ -76,8 +76,10 @@ namespace MVCWebProject2.utilities
             Manufacturer = 10,
             [StringValue("Models")]
             VehicleModel = 15,
+            /*
             [StringValue("Vehicle Status")]
             Status = 20,
+            */
             [StringValue("Transmission Type")]
             TransmissionType = 25,
             [StringValue("Vehicles")]
@@ -102,6 +104,18 @@ namespace MVCWebProject2.utilities
             VehicleStatus = 30,
             [StringValue("Vehicle Group")]
             VehicleGroup = 35
+        }
+
+        public enum VehicleStatus
+        {
+            [StringValue("Available For Hire")]
+            AvailableForHire = 5,
+            [StringValue("In Servicing")]
+            InServicing = 10,
+            [StringValue("On-Hire")]
+            OnHire = 15,
+            [StringValue("Retired")]
+            Retired = 20
         }
     }
 

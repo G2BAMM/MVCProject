@@ -1,6 +1,6 @@
 ﻿/*
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'  Page Title       : HomeController.cs                 '
+'  Class Title      : HomeController.cs                 '
 '  Description      : Manages the home logic            ' 
 '  Author           : Brian McAulay                     '
 '  Creation Date    : 17 Oct 2017                       '
@@ -25,6 +25,7 @@ namespace MVCWebProject2.Controllers
     public class HomeController : Controller
     {
 
+        #region GeneralError
         public ActionResult GeneralError()
         {
             //Prevent users from seeing the actual error on any page or section/service
@@ -33,7 +34,9 @@ namespace MVCWebProject2.Controllers
             //See Global.asax for details
             return View();
         }
+        #endregion
 
+        #region NotFound Error
         public ActionResult NotFoundError()
         {
             //Possible bad link or user manipulating the url in the browser
@@ -42,13 +45,15 @@ namespace MVCWebProject2.Controllers
             //See Global.asax for details
             return View();
         }
+        #endregion
 
+        #region SetTheme
         [Authorize]
         public async Task<ActionResult> ChooseTheme(string id)
         {
             //Move the string value here for better readabilty
             var bootStrapTheme = id;
-            //Get our authenitcated user from the context
+            //Get our authenitcated user from http (owin) context
             var currentUserId = User.Identity.GetUserId();
             //Set up our user manager
             var manager = new UserManager<ApplicationUser>(new UserStore<ApplicationUser>(new ApplicationDbContext()));
@@ -66,7 +71,9 @@ namespace MVCWebProject2.Controllers
             //Make sure we keep the user on the same page they set the theme up on
             return Redirect(Request.UrlReferrer.ToString());
         }
+        #endregion
 
+        #region Index(GET)
         public ActionResult Index()
         {
 
@@ -87,20 +94,26 @@ namespace MVCWebProject2.Controllers
             return View();
             
         }
+        #endregion
 
+        #region About(GET)
         public ActionResult About()
         {
             ViewBag.Message = "Your application description page.";
             
             return View();
         }
+        #endregion
 
+        #region Contact(GET)
         public ActionResult Contact()
         {
             ViewBag.Message = "Your contact page.";
 
             return View();
         }
+        #endregion
+
 
         [Authorize]
         public ActionResult Vehicle()

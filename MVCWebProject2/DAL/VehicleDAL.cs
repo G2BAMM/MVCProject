@@ -155,6 +155,43 @@ namespace MVCWebProject2.DAL
         }
         #endregion
 
+        #region AddNewVehicle
+        // **************** ADD NEW VEHICLE  *********************
+        public static void AddNewVehicle(int ModelID,
+                                        string RegistrationNumber,
+                                        int StatusID,
+                                        int TransmissionID,
+                                        int VehicleGroupID,
+                                        int FuelID,
+                                        string UpdatedBy, 
+                                        out int returnValue)
+
+        {
+            using (SqlConnection conn = new SqlConnection(connString))
+            {
+                //var returnValue = 0;
+                using (SqlCommand cmd = new SqlCommand("AddNewVehicle", conn))
+                {
+                    returnValue = 0;
+                    cmd.CommandType = CommandType.StoredProcedure;
+                    cmd.Parameters.AddWithValue("@VehicleGroupID", VehicleGroupID);
+                    cmd.Parameters.AddWithValue("@ModelID", ModelID);
+                    cmd.Parameters.AddWithValue("@RegistrationNumber", RegistrationNumber);
+                    cmd.Parameters.AddWithValue("@StatusID", StatusID);
+                    cmd.Parameters.AddWithValue("@TransmissionID", TransmissionID);
+                    cmd.Parameters.AddWithValue("@FuelID", FuelID);
+                    cmd.Parameters.AddWithValue("@AddedBy", UpdatedBy);
+                    cmd.Parameters.Add(new SqlParameter("@Return_Value", SqlDbType.Int, 4, ParameterDirection.Output, false, 10, 0, "", DataRowVersion.Proposed, returnValue));
+                    conn.Open();
+                    cmd.ExecuteNonQuery();
+                    returnValue = (int)cmd.Parameters["@Return_Value"].Value;
+                    conn.Close();
+                    
+                }
+            }
+        }
+        #endregion
+
     }
 
 }

@@ -1,6 +1,6 @@
 ﻿/*
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
-'  Page Title       : ManageController.cs               '
+'  Class Title      : ManageController.cs               '
 '  Description      : Manages account management logic  ' 
 '  Author           : Brian McAulay                     '
 '  Creation Date    : 23 Oct 2017                       '
@@ -30,6 +30,7 @@ namespace MVCWebProject2.Controllers
     [Authorize]
     public class ManageController : Controller
     {
+        #region UserAndSignInManagerConfig
         private ApplicationSignInManager _signInManager;
         private ApplicationUserManager _userManager;
 
@@ -67,11 +68,16 @@ namespace MVCWebProject2.Controllers
             }
         }
 
+        #endregion
 
+        #region ConfirmExternalRegister
         public ActionResult ConfirmExternalRegister()
         {
             return View();
         }
+        #endregion
+
+        #region Index(GET)
         //
         // GET: /Manage/Index
         public ActionResult Index()
@@ -115,7 +121,9 @@ namespace MVCWebProject2.Controllers
 
             return View(model);
         }
+        #endregion
 
+        #region Index(POST)
         //
         // POST: /Manage/Update Details
         [HttpPost]
@@ -245,7 +253,9 @@ namespace MVCWebProject2.Controllers
             AddErrors(result);
             return View(model);
         }
+        #endregion
 
+        #region RemoveLogin
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
@@ -269,14 +279,18 @@ namespace MVCWebProject2.Controllers
             }
             return RedirectToAction("ManageLogins", new { Message = message });
         }
+        #endregion
 
+        #region AddPhoneNumber(GET)
         //
         // GET: /Manage/AddPhoneNumber
         public ActionResult AddPhoneNumber()
         {
             return View();
         }
+        #endregion
 
+        #region AddPhoneNumber(POST)
         //
         // POST: /Manage/AddPhoneNumber
         [HttpPost]
@@ -300,7 +314,9 @@ namespace MVCWebProject2.Controllers
             }
             return RedirectToAction("VerifyPhoneNumber", new { PhoneNumber = model.Number });
         }
+        #endregion
 
+        #region EnableTwoFactorAuthentication(POST)
         //
         // POST: /Manage/EnableTwoFactorAuthentication
         [HttpPost]
@@ -315,7 +331,9 @@ namespace MVCWebProject2.Controllers
             }
             return RedirectToAction("Index", "Manage");
         }
+        #endregion
 
+        #region DisableTwoFactorAuthentication(POST)
         //
         // POST: /Manage/DisableTwoFactorAuthentication
         [HttpPost]
@@ -330,7 +348,9 @@ namespace MVCWebProject2.Controllers
             }
             return RedirectToAction("Index", "Manage");
         }
+        #endregion
 
+        #region VerifyPhoneNumber(GET)
         //
         // GET: /Manage/VerifyPhoneNumber
         public async Task<ActionResult> VerifyPhoneNumber(string phoneNumber)
@@ -339,7 +359,9 @@ namespace MVCWebProject2.Controllers
             // Send an SMS through the SMS provider to verify the phone number
             return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
         }
+        #endregion
 
+        #region VerifyPhoneNumber(POST)
         //
         // POST: /Manage/VerifyPhoneNumber
         [HttpPost]
@@ -364,7 +386,9 @@ namespace MVCWebProject2.Controllers
             ModelState.AddModelError("", "Failed to verify phone");
             return View(model);
         }
+        #endregion
 
+        #region RemovePhoneNumber(POST)
         //
         // POST: /Manage/RemovePhoneNumber
         [HttpPost]
@@ -383,14 +407,18 @@ namespace MVCWebProject2.Controllers
             }
             return RedirectToAction("Index", new { Message = ManageMessageId.RemovePhoneSuccess });
         }
+        #endregion
 
+        #region ChangePassword(GET)
         //
         // GET: /Manage/ChangePassword
         public ActionResult ChangePassword()
         {
             return View();
         }
+        #endregion
 
+        #region ChangePassword(POST)
         //
         // POST: /Manage/ChangePassword
         [HttpPost]
@@ -414,14 +442,18 @@ namespace MVCWebProject2.Controllers
             AddErrors(result);
             return View(model);
         }
+        #endregion
 
+        #region SetPassword(GET)
         //
         // GET: /Manage/SetPassword
         public ActionResult SetPassword()
         {
             return View();
         }
+        #endregion
 
+        #region SetPassword(POST)
         //
         // POST: /Manage/SetPassword
         [HttpPost]
@@ -446,6 +478,9 @@ namespace MVCWebProject2.Controllers
             // If we got this far, something failed, redisplay form
             return View(model);
         }
+        #endregion
+
+        #region ManageLogins(GET)
 
         //
         // GET: /Manage/ManageLogins
@@ -469,7 +504,9 @@ namespace MVCWebProject2.Controllers
                 OtherLogins = otherLogins
             });
         }
+        #endregion
 
+        #region LinkLogin(POST)
         //
         // POST: /Manage/LinkLogin
         [HttpPost]
@@ -479,7 +516,9 @@ namespace MVCWebProject2.Controllers
             // Request a redirect to the external login provider to link a login for the current user
             return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), User.Identity.GetUserId());
         }
+        #endregion
 
+        #region LinkLoginCallBack(GET)
         //
         // GET: /Manage/LinkLoginCallback
         public async Task<ActionResult> LinkLoginCallback()
@@ -492,7 +531,9 @@ namespace MVCWebProject2.Controllers
             var result = await UserManager.AddLoginAsync(User.Identity.GetUserId(), loginInfo.Login);
             return result.Succeeded ? RedirectToAction("ManageLogins") : RedirectToAction("ManageLogins", new { Message = ManageMessageId.Error });
         }
+        #endregion
 
+        #region Dispose
         protected override void Dispose(bool disposing)
         {
             if (disposing && _userManager != null)
@@ -503,6 +544,7 @@ namespace MVCWebProject2.Controllers
 
             base.Dispose(disposing);
         }
+        #endregion
 
         #region Helpers
         // Used for XSRF protection when adding external logins

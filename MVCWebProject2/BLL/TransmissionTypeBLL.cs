@@ -25,6 +25,7 @@ namespace MVCWebProject2.BLL
 {
     public class TransmissionTypeBLL
     {
+        #region GetTransmissionList
         public static IEnumerable<VehicleTransmissionList> GetTransmissionList()
         {
             var TransmissionList = new List<VehicleTransmissionList>();
@@ -39,7 +40,9 @@ namespace MVCWebProject2.BLL
             }
             return TransmissionList;
         }
+        #endregion
 
+        #region GetTransmissionType
         public static VehicleTransmissionList GetTransmissionType(int TransmissionID)
         {
             var model = new VehicleTransmissionList();
@@ -49,15 +52,20 @@ namespace MVCWebProject2.BLL
             model.Display = dr["TransmissionType"].ToString();
             return model;
         }
+        #endregion
 
+        #region UpdateTransmissionType
         public static void UpdateTransmissionType(VehicleTransmissionList model, string UpdatedBy)
         {
             TransmissionTypeDAL.UpdateTransmissionType(model.Id, model.Display, UpdatedBy);
         }
+        #endregion
 
+        #region AddTransmissionType
         public static void AddTransmissionType(VehicleTransmissionList model, string UpdatedBy, out int returnValue)
         {
             TransmissionTypeDAL.AddTransmissionType(model.Display, UpdatedBy, out returnValue);
         }
+        #endregion
     }
 }

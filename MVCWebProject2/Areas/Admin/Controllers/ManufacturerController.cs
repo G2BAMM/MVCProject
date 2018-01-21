@@ -1,32 +1,64 @@
-﻿using MVCWebProject2.Areas.Admin.Models;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : ManufacturerController.cs         '
+'  Description      : Manages the manufacturers         ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 10 Jan 2018                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using MVCWebProject2.Areas.Admin.Models;
 using MVCWebProject2.BLL;
 using MVCWebProject2.utilities;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
 using System.Web.Mvc;
 
 namespace MVCWebProject2.Areas.Admin.Controllers
 {
     public class ManufacturerController : Controller
     {
+        #region Index(LIST)
         // GET: Admin/Manufacturer
         public ActionResult Index()
         {
             SetActiveMenuItem();
-            var model = ManufacturerBLL.GetManufacturerList();
-            return View(model: model);
+            try
+            {
+                var model = ManufacturerBLL.GetManufacturerList();
+                return View(model: model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
         }
+        #endregion
 
+        #region EDIT(GET)
         // GET: /Admin/Manufacturer/Edit
         public ActionResult Edit(int id)
         {
             SetActiveMenuItem();
-            var model = ManufacturerBLL.GetManufacturer(id);
-            return View(model: model);
+            try
+            {
+                var model = ManufacturerBLL.GetManufacturer(id);
+                return View(model: model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
         }
+        #endregion
 
+        #region Edit(POST)
         // POST: /Admin/Manufacturer/Edit/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -61,14 +93,18 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             }
 
         }
+        #endregion
 
+        #region Create(GET)
         // GET: Admin/Manufacturer/Create
         public ActionResult Create()
         {
             SetActiveMenuItem();
             return View();
         }
+        #endregion
 
+        #region Create(POST)
         // POST: Admin/Manufacturer/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -104,6 +140,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             }
 
         }
+        #endregion
 
         #region SetActiveMenuItem
         private void SetActiveMenuItem()

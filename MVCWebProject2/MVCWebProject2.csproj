@@ -307,6 +307,7 @@
     <Compile Include="Areas\Admin\Controllers\TransmissionTypeController.cs" />
     <Compile Include="Areas\Admin\Controllers\VehicleController.cs" />
     <Compile Include="Areas\Admin\Controllers\VehicleModelController.cs" />
+    <Compile Include="Areas\Admin\Controllers\VehicleStatusController.cs" />
     <Compile Include="Areas\Admin\Controllers\VehicleTypeController.cs" />
     <Compile Include="Areas\Admin\Models\GalleryViewModels.cs" />
     <Compile Include="Areas\Admin\Models\VehicleViewModels.cs" />
@@ -316,6 +317,7 @@
     <Compile Include="BLL\TransmissionTypeBLL.cs" />
     <Compile Include="BLL\VehicleBLL.cs" />
     <Compile Include="BLL\VehicleModelBLL.cs" />
+    <Compile Include="BLL\VehicleStatusBLL.cs" />
     <Compile Include="BLL\VehicleTypeBLL.cs" />
     <Compile Include="DAL\FuelTypeDAL.cs" />
     <Compile Include="DAL\GalleryDAL.cs" />
@@ -338,6 +340,7 @@
     <Compile Include="Controllers\ManageController.cs" />
     <Compile Include="DAL\VehicleDAL.cs" />
     <Compile Include="DAL\VehicleModelDAL.cs" />
+    <Compile Include="DAL\VehicleStatusDAL.cs" />
     <Compile Include="DAL\VehicleTypeDAL.cs" />
     <Compile Include="Global.asax.cs">
       <DependentUpon>Global.asax</DependentUpon>
@@ -372,6 +375,7 @@
     <Content Include="Content\bootstrap-yeti.css" />
     <Content Include="Content\bootstrap.css" />
     <Content Include="Content\bootstrap.min.css" />
+    <Content Include="Content\jquery-ui.css" />
     <Content Include="favicon.ico" />
     <Content Include="fonts\glyphicons-halflings-regular.svg" />
     <Content Include="Global.asax" />
@@ -422,12 +426,16 @@
     <Content Include="Areas\Admin\Views\VehicleType\Edit.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleType\Create.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleType\AddUpdateConfirm.cshtml" />
+    <Content Include="Areas\Admin\Views\Vehicle\Create.cshtml" />
+    <Content Include="Areas\Admin\Views\VehicleModel\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
     <Content Include="Scripts\jquery-1.10.2.min.js" />
     <None Include="Scripts\jquery.validate-vsdoc.js" />
+    <Content Include="Scripts\jquery-1.12.4.js" />
+    <Content Include="Scripts\jquery-ui.js" />
     <Content Include="Scripts\jquery.validate.js" />
     <Content Include="Scripts\jquery.validate.min.js" />
     <Content Include="Scripts\jquery.validate.unobtrusive.js" />
@@ -482,7 +490,7 @@
   </ItemGroup>
   <ItemGroup>
     <Folder Include="App_Data\" />
-    <Folder Include="Areas\Admin\Views\VehicleModel\" />
+    <Folder Include="Areas\Admin\Views\VehicleStatus\" />
     <Folder Include="images\uploads\" />
   </ItemGroup>
   <ItemGroup>

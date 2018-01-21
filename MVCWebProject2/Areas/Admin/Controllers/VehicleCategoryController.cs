@@ -22,30 +22,51 @@ namespace MVCWebProject2.Areas.Admin.Controllers
     [Authorize(Roles = ("Super Admin, Admin"))]
     public class VehicleCategoryController : Controller
     {
+
+        #region Index(LIST)
         // GET: Admin/VehicleCategory
         public ActionResult Index()
         {
-            //Return the list of defined vehicle groups from SQL
-            return View(model: VehicleCategoriesBLL.GetVehicleCategoryList());
+            try
+            {
+                //Return the list of defined vehicle groups from SQL
+                return View(model: VehicleCategoriesBLL.GetVehicleCategoryList());
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
         }
-        
+        #endregion
+
+        #region Edit(GET)
         //GET: Admin/VehicleCategory/Edit
         public ActionResult Edit(int id)
         {
-            //Build our model from SQL
-            var model = VehicleCategoriesBLL.GetVehicleCategoryDataset(id);
-            //Create a temp list of our vehicle types to avoid multiple SQL reads when there are errors on the user form
-            TempData["SelectList"] = model.VehicleType;
-            //Now return the main edit view form
-            return View(model);
+            try
+            {
+                //Build our model from SQL
+                var model = VehicleCategoriesBLL.GetVehicleCategoryDataset(id);
+                //Create a temp list of our vehicle types to avoid multiple SQL reads when there are errors on the user form
+                TempData["SelectList"] = model.VehicleType;
+                //Now return the main edit view form
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
         }
+        #endregion
 
+        #region Edit(POST)
         //POST: Admin/VehicleCategory/Edit
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(VehicleCategoryViewModel model)
         {
-
             //Repopulate the dropdown list of vehicle types without asking SQL again
             TempData.Keep();
             model.VehicleType = (SelectList)TempData["SelectList"];
@@ -73,22 +94,30 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 TempData["ErrorMessage"] = ex.Message;
                 return Redirect("~/Admin/Home/Error");
             }
-            
-            
-           
-
         }
+        #endregion
 
+        #region Create(GET)
         //GET: Admin/VehicleCategory/Create
         public ActionResult Create()
         {
-            //Generate an empty model with populated dropdown list
-            var model = VehicleCategoriesBLL.GetVehicleList();
-            //Create a temp list of our vehicle types to avoid multiple SQL reads when there are errors on the user form
-            TempData["SelectList"] = model.VehicleType;
-            return View(model);
+            try
+            {
+                //Generate an empty model with populated dropdown list
+                var model = VehicleCategoriesBLL.GetVehicleList();
+                //Create a temp list of our vehicle types to avoid multiple SQL reads when there are errors on the user form
+                TempData["SelectList"] = model.VehicleType;
+                return View(model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
         }
+        #endregion
 
+        #region Create(POST)
         //POST: Admin/VehicleCategory/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -123,6 +152,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             }
             return View("AddUpdateConfirm");
         }
+        #endregion
 
     }
 }

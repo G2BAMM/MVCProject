@@ -1,4 +1,18 @@
-﻿using MVCWebProject2.Areas.Admin.Models;
+﻿/*
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+'  Page Title       : VehicleTypeController.cs          '
+'  Description      : Manages the vehicle types         ' 
+'  Author           : Brian McAulay                     '
+'  Creation Date    : 05 Jan 2018                       '
+'  Version No       : 1.0                               '
+'  Email            : g2bam2012@gmail.com               '
+'  Revision         :                                   '
+'  Revision Reason  :                                   '
+'  Revisor          :                       		    '
+'  Date Revised     :                       		    '  
+'''''''''''''''''''''''''''''''''''''''''''''''''''''''''
+*/
+using MVCWebProject2.Areas.Admin.Models;
 using MVCWebProject2.BLL;
 using MVCWebProject2.utilities;
 using System;
@@ -11,22 +25,44 @@ namespace MVCWebProject2.Areas.Admin.Controllers
 {
     public class VehicleTypeController : Controller
     {
+        #region Index(LIST)
         // GET: Admin/VehicleType
         public ActionResult Index()
         {
             SetActiveMenuItem();
-            var model = VehicleTypeBLL.GetVehicleTypeList();
-            return View(model: model);
+            try
+            {
+                var model = VehicleTypeBLL.GetVehicleTypeList();
+                return View(model: model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
         }
+        #endregion
 
+        #region Edit(GET)
         // GET: /Admin/VehicleType/Edit
         public ActionResult Edit(int id)
         {
             SetActiveMenuItem();
-            var model = VehicleTypeBLL.GetVehicleType(id);
-            return View(model: model);
-        }
+            try
+            {
+                var model = VehicleTypeBLL.GetVehicleType(id);
+                return View(model: model);
+            }
+            catch (Exception ex)
+            {
+                TempData["ErrorMessage"] = ex.Message;
+                return Redirect("~/Admin/Home/Error");
+            }
 
+        }
+        #endregion
+
+        #region Edit(POST)
         // POST: /Admin/VehicleType/Edit/Id
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -59,16 +95,19 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 TempData["ErrorMessage"] = ex.Message;
                 return Redirect("~/Admin/Home/Error");
             }
-
         }
+        #endregion
 
+        #region Create(GET)
         // GET: Admin/VehicleType/Create
         public ActionResult Create()
         {
             SetActiveMenuItem();
             return View();
         }
+        #endregion
 
+        #region Create(POST)
         // POST: Admin/VehicleType/Create
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -96,7 +135,6 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 //We can now safely go to the confirmation view
                 return View("AddUpdateConfirm");
             }
-
             catch (Exception ex)
             {
                 TempData["ErrorMessage"] = ex.Message;
@@ -104,6 +142,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             }
 
         }
+        #endregion
 
         #region SetActiveMenuItem
         private void SetActiveMenuItem()

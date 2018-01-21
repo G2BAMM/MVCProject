@@ -95,7 +95,7 @@ namespace MVCWebProject2.DAL
         }
         #endregion
 
-        #region GetVehicleCategoryDetails
+        #region GetVehicleCategoryDataSet
         // ********** VIEW VEHICLE CATEGORY DETAILS ********************
         public static DataSet GetVehicleCategory(int CategoryId)
         {
@@ -158,7 +158,7 @@ namespace MVCWebProject2.DAL
                 using (SqlCommand cmd = new SqlCommand("UpdateVehicleCategory", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@Id", Id);
+                    cmd.Parameters.AddWithValue("@VehicleType", Id);
                     cmd.Parameters.AddWithValue("@VehicleClassType", VehicleClassType);
                     cmd.Parameters.AddWithValue("@VehicleTypeId", VehicleTypeId);
                     cmd.Parameters.AddWithValue("@ImageId", ImageId);

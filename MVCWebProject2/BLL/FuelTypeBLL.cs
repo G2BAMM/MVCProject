@@ -22,6 +22,7 @@ namespace MVCWebProject2.BLL
 {
     public class FuelTypeBLL
     {
+        #region GetFuelTypes
         public static IEnumerable<VehicleFuelList> GetFuelTypes()
         {
             var FuelList = new List<VehicleFuelList>();
@@ -36,7 +37,9 @@ namespace MVCWebProject2.BLL
             }
             return FuelList;
         }
+        #endregion
 
+        #region GetFuelType
         public static VehicleFuelList GetFuelType(int FuelID)
         {
             var model = new VehicleFuelList();
@@ -46,15 +49,20 @@ namespace MVCWebProject2.BLL
             model.Display = dr["FuelType"].ToString();
             return model;
         }
+        #endregion
 
+        #region UpdateFuelType
         public static void UpdateFuelType(VehicleFuelList model, string UpdatedBy)
         {
             FuelTypeDAL.UpdateFuelType(model.Id, model.Display, UpdatedBy);
         }
+        #endregion
 
+        #region AddFuelType
         public static void AddFuelType(VehicleFuelList model, string UpdatedBy, out int returnValue)
         {
              FuelTypeDAL.AddFuelType(model.Display, UpdatedBy, out returnValue);
         }
+        #endregion
     }
 }

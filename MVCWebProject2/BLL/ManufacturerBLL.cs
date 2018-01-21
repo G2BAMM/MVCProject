@@ -26,6 +26,7 @@ namespace MVCWebProject2.BLL
     public class ManufacturerBLL
     {
 
+        #region GetManufacturerList
         public static IEnumerable<VehicleManufacturerList> GetManufacturerList()
         {
             var ManufacturerList = new List<VehicleManufacturerList>();
@@ -40,7 +41,9 @@ namespace MVCWebProject2.BLL
             }
             return ManufacturerList;
         }
+        #endregion
 
+        #region GetManufacturer
         public static VehicleManufacturerList GetManufacturer(int ManufacturerID)
         {
             var model = new VehicleManufacturerList();
@@ -50,15 +53,20 @@ namespace MVCWebProject2.BLL
             model.Display = dr["Manufacturer"].ToString();
             return model;
         }
+        #endregion
 
+        #region UpdateManufacturer
         public static void UpdateManufacturer(VehicleManufacturerList model, string UpdatedBy)
         {
             ManufacturerDAL.UpdateManufacturer(model.Id, model.Display, UpdatedBy);
         }
+        #endregion
 
+        #region AddManufacturer
         public static void AddManufacturer(VehicleManufacturerList model, string UpdatedBy, out int returnValue)
         {
             ManufacturerDAL.AddManufacturer(model.Display, UpdatedBy, out returnValue);
         }
+        #endregion
     }
 }

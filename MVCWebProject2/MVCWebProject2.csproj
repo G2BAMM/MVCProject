@@ -429,6 +429,7 @@
     <Content Include="Areas\Admin\Views\Vehicle\Create.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleModel\Index.cshtml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
+    <None Include="Properties\PublishProfiles\MVCWebProject220180121021329 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />

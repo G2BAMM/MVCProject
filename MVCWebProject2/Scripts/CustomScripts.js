@@ -12,10 +12,18 @@
 '  Date Revised     :                       		    '  
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 */
+
 var url = "/MVCWebProject/Admin/Gallery/GetJsonGallery/";
 var modelURL = "/MVCWebProject/Admin/Vehicle/GetJSONVehicleModels/"
 var filePath = "/MVCWebProject/images/uploads/"
 var updateModelURL = "/MVCWebProject/Admin/VehicleModel/UpdateModel/"
+/*
+    //live server settings
+    var url = "/Admin/Gallery/GetJsonGallery/";
+    var modelURL = "/Admin/Vehicle/GetJSONVehicleModels/"
+    var filePath = "/images/uploads/"
+    var updateModelURL = "/Admin/VehicleModel/UpdateModel/"
+*/
 var modelId = -1;
 var manufacturerId = -1;
 
@@ -89,19 +97,22 @@ function LoadGallery(control, page, items, pageControl) {
         $("#" + control).contents().remove();
         //Iterate through the gallery JSON objects and build the modal and bootstrap objects
         $.each(gallery, function (i, field) {
-            $("#" + control).append('<div class="col-sm-3"><img src='
-                + "'/MVCWebProject/images/uploads/"
+            $("#" + control).append("<div class='col-sm-3'><img src='"
+                + filePath
                 + field.SmallThumbnail
+                + '' + ""
                 + "' class='img-responsive img-thumbnail img-rounded'"
                 + ' onclick="SwapImage('
                 + field.ImageId
                 + ",'"
                 + field.ThumbnailImage
-                + "');"
-                + ' id='
+                + "');" + '"'
+                + " id='"
                 + field.ImageId
-                + '" /><br /><br /></div>');
+                + "' /><br /><br /></div>");
+            
         });
+        
         //Now generate the pagers
         CreatePagers(control, numberOfPages, page, items, pageControl);
     });

@@ -303,7 +303,7 @@ function SaveModel() {
                 //Delay hiding it for a few seconds
                 $("#ErrorMessage_" + manufacturerId).delay(4000).fadeOut('slow');
 
-                //Make sure our save button gets re-enabled in case so that the user can try again
+                //Make sure our save button gets re-enabled so that the user can try again
                 $("#save_" + manufacturerId).removeAttr('disabled');
 
             }

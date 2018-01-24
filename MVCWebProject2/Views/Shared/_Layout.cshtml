@@ -15,12 +15,12 @@
         {
             ViewBag.Theme = Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString();
         }
-        <link href="/MVCWebProject/Content/@ThemeManager.SetThemeName(ViewBag.Theme)" rel="stylesheet" />
+        <link href="~/Content/@ThemeManager.SetThemeName(ViewBag.Theme)" rel="stylesheet" />
 
     }
     else
     {
-        <link href="/MVCWebProject/Content/bootstrap.css" rel="stylesheet" />
+        <link href="~/Content/bootstrap.css" rel="stylesheet" />
     }
 
     @Styles.Render("~/Content/css")

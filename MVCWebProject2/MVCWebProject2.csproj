@@ -383,6 +383,24 @@
     <Content Include="Content\bootstrap-united.css" />
     <Content Include="images\fiat_500.png" />
     <Content Include="images\seat.png" />
+    <Content Include="images\uploads\02_12_2017_15_29_47_Dream-Big-PPT-Title.jpg" />
+    <Content Include="images\uploads\02_12_2017_15_29_47_Dream-Big-PPT-Title_small.jpg" />
+    <Content Include="images\uploads\02_12_2017_15_29_47_Dream-Big-PPT-Title_thumb.jpg" />
+    <Content Include="images\uploads\02_12_2017_15_30_01_corsa.png" />
+    <Content Include="images\uploads\02_12_2017_15_30_01_corsa_small.png" />
+    <Content Include="images\uploads\02_12_2017_15_30_01_corsa_thumb.png" />
+    <Content Include="images\uploads\08_12_2017_17_31_40_fiat_500.png" />
+    <Content Include="images\uploads\08_12_2017_17_31_40_fiat_500_small.png" />
+    <Content Include="images\uploads\08_12_2017_17_31_40_fiat_500_thumb.png" />
+    <Content Include="images\uploads\08_12_2017_17_31_55_17KiaPic25drSilFL1_800.jpg" />
+    <Content Include="images\uploads\08_12_2017_17_31_55_17KiaPic25drSilFL1_800_small.jpg" />
+    <Content Include="images\uploads\08_12_2017_17_31_55_17KiaPic25drSilFL1_800_thumb.jpg" />
+    <Content Include="images\uploads\08_12_2017_17_33_04_broken-car-vehicle-vintage.jpg" />
+    <Content Include="images\uploads\08_12_2017_17_33_04_broken-car-vehicle-vintage_small.jpg" />
+    <Content Include="images\uploads\08_12_2017_17_33_04_broken-car-vehicle-vintage_thumb.jpg" />
+    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture_small.png" />
+    <Content Include="images\uploads\26_11_2017_11_25_20_seat_500_picture_thumb.png" />
     <Content Include="resources\btn_google_signin_dark_disabled_web.png" />
     <Content Include="resources\btn_google_signin_dark_focus_web.png" />
     <Content Include="resources\Google_signin.png" />
@@ -428,8 +446,8 @@
     <Content Include="Areas\Admin\Views\VehicleType\AddUpdateConfirm.cshtml" />
     <Content Include="Areas\Admin\Views\Vehicle\Create.cshtml" />
     <Content Include="Areas\Admin\Views\VehicleModel\Index.cshtml" />
+    <None Include="Properties\PublishProfiles\Azure - Web Deploy.pubxml" />
     <None Include="Properties\PublishProfiles\FolderProfile.pubxml" />
-    <None Include="Properties\PublishProfiles\MVCWebProject220180121021329 - Web Deploy.pubxml" />
     <None Include="Scripts\jquery-1.10.2.intellisense.js" />
     <Content Include="Scripts\CustomScripts.js" />
     <Content Include="Scripts\jquery-1.10.2.js" />
@@ -444,15 +462,6 @@
     <Content Include="Scripts\modernizr-2.6.2.js" />
     <Content Include="Scripts\respond.js" />
     <Content Include="Scripts\respond.min.js" />
-    <Content Include="Web.config">
-      <SubType>Designer</SubType>
-    </Content>
-    <Content Include="Web.Debug.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
-    <Content Include="Web.Release.config">
-      <DependentUpon>Web.config</DependentUpon>
-    </Content>
     <Content Include="Views\Web.config" />
     <Content Include="Views\_ViewStart.cshtml" />
     <Content Include="Views\Shared\Error.cshtml" />
@@ -492,7 +501,6 @@
   <ItemGroup>
     <Folder Include="App_Data\" />
     <Folder Include="Areas\Admin\Views\VehicleStatus\" />
-    <Folder Include="images\uploads\" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="fonts\glyphicons-halflings-regular.woff" />

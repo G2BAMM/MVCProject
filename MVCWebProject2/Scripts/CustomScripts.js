@@ -18,7 +18,7 @@ var modelURL = "/MVCWebProject/Admin/Vehicle/GetJSONVehicleModels/"
 var filePath = "/MVCWebProject/images/uploads/"
 var updateModelURL = "/MVCWebProject/Admin/VehicleModel/UpdateModel/"
 /*
-    //live server settings
+    //Production/Staging server settings
     var url = "/Admin/Gallery/GetJsonGallery/";
     var modelURL = "/Admin/Vehicle/GetJSONVehicleModels/"
     var filePath = "/images/uploads/"
@@ -87,7 +87,7 @@ function StartProgress(control) {
 }
 
 function LoadGallery(control, page, items, pageControl) {
-    //This function gets called by the modal gallery when adding/editing a vehicle category
+    //This function gets called by the modal gallery when adding/editing a vehicle category and the pagers are clicked on
     $.getJSON(url + page + "/" + items, function (result) {
         //Set the total number of pages available for this amount of images(items)
         var numberOfPages = result["NumberOfPages"];
@@ -131,37 +131,37 @@ function CreatePagers(control, numberofpages, page, items, pagecontrol) {
     var pagerString = "";
     for (var loopCount = 1; loopCount <= numberofpages; loopCount++) {
         if (loopCount === 1 && page === 1) {
-            //Set first page link to disabled as we're on the first page
+            //Set the 'go to first page' link to disabled as we're on the first page
             pagerString += "<li class='page-item disabled'>";
             pagerString += "<a class='page-link' href='#'>&laquo;</a>";
             pagerString += "</li>";
         }
         else if (loopCount == 1 && page > 1) {
-            //Set the first page link to enabled as we're not on page 1
+            //Set the 'go to first page' link to enabled as we're not on page 1
             pagerString += "<li class='page-item'>";
             pagerString += '<a class="page-link" href="javascript:LoadGallery(' + "'" + control + "'," + 1 + "," + items + ",'" + pagecontrol + "');" + '"' + ">&laquo;</a>";
             pagerString += "</li>";
         }
         if (loopCount == page) {
-            //set the actual page we're on
+            //This is the page we're viewing so disable this number
             pagerString += "<li class='page-item active'>";
             pagerString += "<a class='page-link' href='#'>" + loopCount + "</a>";
             pagerString += "</li>";
         }
         else {
-            //set the link to the page to go to
+            //Set the link to the page to go to as this is not the page we're currently viewing
             pagerString += "<li class='page-item'>";
             pagerString += '<a class="page-link" href="javascript:LoadGallery(' + "'" + control + "'," + loopCount + "," + items + ",'" + pagecontrol + "');" + '"' + ">" + loopCount + "</a>";
             pagerString += "</li>";
         }
         if (loopCount == numberofpages && page == numberofpages) {
-            //Set the last page link to disabled as we're on the last page
+            //Set the 'go to last page' link to disabled as we're on the last page
             pagerString += "<li class='page-item disabled'>";
             pagerString += "<a class='page-link' href='#'>&raquo;</a>";
             pagerString += "</li>";
         }
         else if (loopCount == numberofpages && page < numberofpages) {
-            //Set the last page to be enabled as we're not on the last page
+            //Set the 'go to last page' to be enabled as we're not on the last page
             pagerString += "<li class='page-item'>";
             pagerString += '<a class="page-link" href="javascript:LoadGallery(' + "'" + control + "'," + numberofpages + "," + items + ",'" + pagecontrol + "');" + '"' + ">&raquo;</a>";
             pagerString += "</li>";
@@ -172,10 +172,11 @@ function CreatePagers(control, numberofpages, page, items, pagecontrol) {
     }
 }
 
+
 function SwapImage(id, thumbnailImage) {
     //This function gets called by the modal gallery when adding/editing a vehicle category
     var src = filePath + thumbnailImage;
-    //Change the vehicle ImageId to the one selected (this the model field)
+    //Change the vehicle ImageId to the one selected (this is the C# model field)
     $("#ImageId").val(id);
     //Set the new image to the one we just selected
     $("#Vehicle").attr("src", src);
@@ -183,15 +184,19 @@ function SwapImage(id, thumbnailImage) {
     ToggleModal('myModal');
 }
 
+//This function gets called when a manufacturer is selected on the edit vehicle form
+//and is used to rebuild the list of models paired with that manufacturer
 function RebuildMenu(control) {
     //Set our dropdown control we're rebuilding as a local var to clear and rebuild list into later
     var localControl = $("#" + control);
+
     //Always empty the current menu even if the user selected the default item on the manufacturer list
     localControl.empty();
+
     //Now add a new default item advising the user to select a new model regardless of whether there will be any items
     $("<option />", {
         val: "",
-        text: "-- Choose New Model --"
+        text: "--- Please Select ---"
     }).appendTo(localControl);
     //alert("Menu was changed! " + $("#ManufacturerID option:selected").val());
 
@@ -213,7 +218,7 @@ function RebuildMenu(control) {
 
 /****************** Accordion functions ***************************************/
 
-//Make sure we always revert to the model list when we close an accordion pane
+//This event also fires when the 'Cancel' button is clicked, as well as local calls in this script
 function SwitchPanelBody(panelNumber) {
     //Flips the form and list panels around
     if (!$('#main_content_' + panelNumber).is(":visible")){
@@ -224,40 +229,58 @@ function SwitchPanelBody(panelNumber) {
     $('#panel_form_' + panelNumber).toggle(1000);
 }
 
-//Make sure when adding a new model we always set the form field to an empty string
+//This event fires when the 'Add New Model' button is clicked
 function ClearModelName(manufacturerId) {
     var control = $("#Display_" + manufacturerId);
+
     //Set the model name form field text value
     $(control).val('');
+
     //Hide any errors present from previous processes
     $("#error_" + manufacturerId).html('');
+
+    //Re-enable the save button in case it was disabled by another process
+    $("#save_" + manufacturerId).removeAttr('disabled');
+
     //Show the form panel now
     SwitchPanelBody(manufacturerId);
 }
 
+//Performs the save operation, which will either cause an update or an insert @ SQL,
+//dependent on whether a modelId with a value greater than 0 gets passed back
 function SaveModel() {
     //Performs the JSON update and rebuild of the lists
+
+    //Make sure we don't just get a bunch of spaces entered by trimming both ends of the input
     var modelName = $("#Display_" + manufacturerId).val().trim();
 
     if (modelName.length == 0) {
+        //Input was an empty string
         $("#error_" + manufacturerId).html('Field cannot be blank!');
-        alert("ModelName length" + modelName.length);
         return;
     }
 
     if (modelName.length > 50) {
+        //OvInput was over sized
         $("#error_" + manufacturerId).html('Cannot have more than 50 chars!');
         return;
     }
 
+    //Prevent multiple clicks on the save button while we perform our update
+    $("#save_" + manufacturerId).attr('disabled', 'disabled');
+
     //Set the form field value to the same one as the link text that opened the form
     $("#Display_" + manufacturerId).val(modelName);
+
     //Make sure we clear any errors from any previous processes
     $("#error_" + manufacturerId).html('');
+
     //Set a variable to collect our JSON response into
     var getData;
+
     //Set our ordered list control we're rebuilding as a local var to clear and rebuild list into later
     var localControl = $("#ModelList_" + manufacturerId);
+
     //Finally try to perform the update
     $.ajax({
         type: "POST",
@@ -266,37 +289,83 @@ function SaveModel() {
         contentType: "application/json; charset=utf-8",
         dataType: "json",
         success: function (response) {
-            //Always empty the current list prior to rebuilding
-            localControl.empty();
             //JSONIfy our response
             getData = JSON.stringify(response);
-            //Now we can iterate over the items
-            //alert(getData);
+            
+            //If we have a duplicated model name then we will be returned a single text line as JSON so we can straight forwardly parse this and test
+            if ($.parseJSON(getData) == "-1") {
+                //Generate the error message
+                $("#ErrorMessage_" + manufacturerId).html('Duplicate model name for this manufacturer, please edit your model name and try again.');
 
-            $.each($.parseJSON(getData), function (i, field) {
-                $(localControl).append('<li><a href="JavaScript: OpenForm(' + manufacturerId + "," + field.Id + "," + "'" + field.Display + "'" + ');"  id="' + field.Id + '"' + ">" + field.Display + '</a></li>');
-                alert('<li><a href="JavaScript: OpenForm(' + manufacturerId + "," + field.Id + "," + "'" + field.Display + "'" + ');"  id="' + field.Id + '"' + ">" + field.Display + '</a></li>');
-            });
+                //Now display it
+                $("#ErrorMessage_" + manufacturerId).toggle();
+
+                //Delay hiding it for a few seconds
+                $("#ErrorMessage_" + manufacturerId).delay(4000).fadeOut('slow');
+
+                //Make sure our save button gets re-enabled in case so that the user can try again
+                $("#save_" + manufacturerId).removeAttr('disabled');
+
+            }
+            else {
+                //Always empty the current list prior to rebuilding
+                localControl.empty();
+
+                //Now we can iterate over the items and rebind them to our ordered list
+                $.each($.parseJSON(getData), function (i, field) {
+                    $(localControl).append('<li><a href="JavaScript: OpenForm(' + manufacturerId + "," + field.Id + "," + "'" + field.Display + "'" + ');"  id="' + field.Id + '"' + ">" + field.Display + '</a></li>');
+                    //alert('<li><a href="JavaScript: OpenForm(' + manufacturerId + "," + field.Id + "," + "'" + field.Display + "'" + ');"  id="' + field.Id + '"' + ">" + field.Display + '</a></li>');
+                });
+
+                //Show the success message
+                $("#Message_" + manufacturerId).toggle();
+
+                //Delay hiding it for a few seconds
+                $("#Message_" + manufacturerId).delay(2000).fadeOut('slow');
+
+                //Gracefully switch back to the list of models now
+                setTimeout(function () { SwitchPanelBody(manufacturerId); }, 3000);
+            }
         },
-        failure: function (response) {
-            alert("Failure " + response.responseText);
-        },
+        
         error: function (response) {
-            alert("Error " + response.responseText);
+            alert("Error " + response.statusText + ', ' + response.status + ', ' + response.url + response.responseJSON);
+
+            //Generate the error message
+            $("#ErrorMessage_" + manufacturerId).html('There was an error updating! Failure reason ' + response.statusText + ' error code ' + response.status);
+
+            //Now display it
+            $("#ErrorMessage_" + manufacturerId).toggle();
+
+            //Delay hiding it for a few seconds
+            $("#ErrorMessage_" + manufacturerId).delay(4000).fadeOut('slow');
+
+            //Make sure our save button gets re-enabled in case so that the user can try again
+            $("#save_" + manufacturerId).removeAttr('disabled');
         }
     });
     
 }
+    //This fires when a model name is clicked inside an accordion pane
     function OpenForm(ManufacturerID, ModelID, ModelName) {
-        //Presents the edit form for the model being edited or added
+        //Presents the edit form for the 'vehicle model' that's being edited or added
         manufacturerId = ManufacturerID;
         modelId = ModelID;
         var modelName = ModelName
         var control = $("#Display_" + manufacturerId);
-        //Set the model name form field text value
+
+        //Set the 'vehicle model name' form field text value
         $(control).val(modelName);
+
+        //Make sure the saved successfully message is always hidden on a newly opened form
+        $("#Message_" + manufacturerId).hide();
+
+        //Make sure our save button gets re-enabled in case it was disabled by another process
+        $("#save_" + manufacturerId).removeAttr('disabled');
+
         //Show the form panel now
         SwitchPanelBody(manufacturerId);
+        
     }
 
 /****************** Ends Accordion functions ***************************************/

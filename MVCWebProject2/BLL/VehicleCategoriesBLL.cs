@@ -69,6 +69,7 @@ namespace MVCWebProject2.BLL
             model.LuggageCapacity = (int)row["LuggageCapacity"];
             model.MonthlyRate = (decimal)row["MonthlyRate"];
             model.NumberOfSeats = (int)row["NumberOfSeats"];
+            model.NumberOfDoors = (int)row["NumberOfDoors"];
             model.VehicleClassType = row["VehicleClassType"].ToString();
             model.ImageId = (int)row["ImageId"];
             model.VehicleTypeID = (int)row["VehicleTypeID"];
@@ -106,6 +107,7 @@ namespace MVCWebProject2.BLL
                                                               model.WeekendRate,
                                                               model.MonthlyRate,
                                                               model.NumberOfSeats,
+                                                              model.NumberOfDoors,
                                                               model.BasicDescription,
                                                               model.LuggageCapacity,
                                                               UpdatedBy);
@@ -129,6 +131,7 @@ namespace MVCWebProject2.BLL
                                                               model.WeekendRate,
                                                               model.MonthlyRate,
                                                               model.NumberOfSeats,
+                                                              model.NumberOfDoors,
                                                               model.BasicDescription,
                                                               model.LuggageCapacity,
                                                               UpdatedBy);

@@ -12,8 +12,6 @@
 '  Date Revised     :                       		    '  
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 */
-using System.Collections;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.Web.Mvc;
 
@@ -25,7 +23,7 @@ namespace MVCWebProject2.Areas.Admin.Models
         public int Id { get; set; }
         [Display(Name = "Vehicle Description")]
         public string VehicleClassType { get; set; }
-        [Display(Name = "Vehicle Name")]
+        [Display(Name = "Vehicle Type")]
         public string VehicleType { get; set; }
         [Display(Name = "Category Image")]
         public string VehicleImage { get; set; }
@@ -39,7 +37,7 @@ namespace MVCWebProject2.Areas.Admin.Models
     {
         public int? Id { get; set; }
         [Required]
-        [Display(Name = "Vehicle Name")]
+        [Display(Name = "Group Name")]
         [StringLength(50, ErrorMessage = "Max is 50 chars for vehicle name.", MinimumLength = 1)]
         public string VehicleClassType { get; set; }
         public SelectList VehicleType { get; set; }
@@ -68,6 +66,10 @@ namespace MVCWebProject2.Areas.Admin.Models
         [Display(Name = "No of Seats")]
         [Range(2, 16, ErrorMessage = "Must have at least 2 seats and not more than 16")]
         public int NumberOfSeats { get; set; }
+        [Required]
+        [Display(Name = "Number of Doors")]
+        [Range(2, 7, ErrorMessage = "Min doors are 2 and max 7")]
+        public int NumberOfDoors { get; set; }
         [Required]
         [Display(Name = "Vehicle Features")]
         [StringLength(250, ErrorMessage = "Max is 250 chars for vehicle description.", MinimumLength = 1)]

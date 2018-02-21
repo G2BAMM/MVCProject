@@ -13,13 +13,9 @@
 '  Date Revised     :                       		    '  
 '''''''''''''''''''''''''''''''''''''''''''''''''''''''''
 */
-using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
-using System.Linq;
-using System.Web;
 
 namespace MVCWebProject2.DAL
 {
@@ -30,7 +26,7 @@ namespace MVCWebProject2.DAL
         private static DataTable dt;
         #endregion
 
-        #region GetExtras
+        #region GetExtras(List)
         // **************** GET RENTAL EXTRAS LIST *********************
         public static DataTable GetRentalExtras()
         {
@@ -73,7 +69,7 @@ namespace MVCWebProject2.DAL
 
         #region UpdateRentalsExtras
         // **************** UPDATE RENTALS EXTRA  *********************
-        public static void UpdateRentalsExtra(int ExtraID, string ExtraDescription, string UpdatedBy)
+        public static void UpdateRentalsExtra(int ExtraID, string ExtraDescription, decimal ExtraPrice, string UpdatedBy)
         {
             using (SqlConnection conn = new SqlConnection(connString))
             {
@@ -83,6 +79,7 @@ namespace MVCWebProject2.DAL
                     SqlDataAdapter sd = new SqlDataAdapter(cmd);
                     cmd.Parameters.AddWithValue("@ExtraID", ExtraID);
                     cmd.Parameters.AddWithValue("@ExtraDescription", ExtraDescription);
+                    cmd.Parameters.AddWithValue("@ExtraPrice", ExtraPrice);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
                     conn.Open();
                     cmd.ExecuteNonQuery();
@@ -93,9 +90,9 @@ namespace MVCWebProject2.DAL
         }
         #endregion
 
-        #region AddEXtrasType
+        #region AddExtrasType
         // **************** ADD RENTALS EXTRAS   *********************
-        public static void AddRentalExtra(string ExtraDescription, string UpdatedBy, out int returnValue)
+        public static void AddRentalExtra(string ExtraDescription, decimal ExtraPrice, string UpdatedBy, out int returnValue)
         {
             returnValue = 0;
             using (SqlConnection conn = new SqlConnection(connString))
@@ -105,6 +102,7 @@ namespace MVCWebProject2.DAL
                     cmd.CommandType = CommandType.StoredProcedure;
                     SqlDataAdapter sd = new SqlDataAdapter(cmd);
                     cmd.Parameters.AddWithValue("@ExtraDescription", ExtraDescription);
+                    cmd.Parameters.AddWithValue("@ExtraPrice", ExtraPrice);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
                     cmd.Parameters.Add(new SqlParameter("@Return_Value", SqlDbType.Int, 4, ParameterDirection.Output, false, 10, 0, "", DataRowVersion.Proposed, returnValue));
                     conn.Open();

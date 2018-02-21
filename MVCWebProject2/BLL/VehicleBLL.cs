@@ -41,7 +41,7 @@ namespace MVCWebProject2.BLL
                     RegistrationNumber = row["RegistrationNumber"].ToString(),
                     VehicleModel = row["ModelName"].ToString(),
                     TransmissionType = row["TransmissionType"].ToString(),
-                    VehicleStatus = row["VehicleStatus"].ToString()
+                    VehicleGroup = row["VehicleClassType"].ToString()
                 };
                 myList.Add(myListItems);
             }
@@ -70,7 +70,7 @@ namespace MVCWebProject2.BLL
                     model.VehicleGroupID = (int)row["VehicleGroupID"];
                     model.VehicleID = (int)row["VehicleID"];
                     model.FuelID = (int)row["FuelID"];
-                    model.StatusID = (int)row["StatusID"];
+                    model.CurrentMileage = (int)row["CurrentMileage"];
                 }
                 else if (row["TableName"].ToString() == Constants.VehicleDataSetManager.FuelType.ToString())
                 {
@@ -92,10 +92,7 @@ namespace MVCWebProject2.BLL
                 {
                     model.VehicleModelList = PopulateDropDownList(Constants.VehicleDataSetManager.VehicleModel, dt);
                 }
-                else if (row["TableName"].ToString() == Constants.VehicleDataSetManager.VehicleStatus.ToString())
-                {
-                    model.VehicleStatusList = PopulateDropDownList(Constants.VehicleDataSetManager.VehicleStatus, dt);
-                }
+                
             }
 
             return model;
@@ -107,13 +104,13 @@ namespace MVCWebProject2.BLL
         public static int UpdateVehicle(int VehicleID,
                                          int ModelID,
                                          string RegistrationNumber,
-                                         int StatusID,
+                                         int CurrentMileage,
                                          int TransmissionID,
                                          int VehicleGroupID,
                                          int FuelID,
                                          string UpdatedBy)
         {
-            var result = VehicleDAL.UpdateVehicle(VehicleID, ModelID, RegistrationNumber, StatusID, TransmissionID, VehicleGroupID, FuelID, UpdatedBy);
+            var result = VehicleDAL.UpdateVehicle(VehicleID, ModelID, RegistrationNumber, CurrentMileage, TransmissionID, VehicleGroupID, FuelID, UpdatedBy);
             return result;
         }
         #endregion
@@ -121,14 +118,14 @@ namespace MVCWebProject2.BLL
         #region AddNewVehicle
         public static void AddNewVehicle(int ModelID,
                                     string RegistrationNumber,
-                                    int statusID,
+                                    int CurrentMileage,
                                     int TransmissionID,
                                     int VehicleGroupID,
                                     int FuelID,
                                     string UpdatedBy,
                                     out int returnValue)
         {
-            VehicleDAL.AddNewVehicle(ModelID, RegistrationNumber, statusID, TransmissionID, VehicleGroupID, FuelID, UpdatedBy, out returnValue);
+            VehicleDAL.AddNewVehicle(ModelID, RegistrationNumber, CurrentMileage, TransmissionID, VehicleGroupID, FuelID, UpdatedBy, out returnValue);
         }
         #endregion
 
@@ -198,18 +195,7 @@ namespace MVCWebProject2.BLL
                     }
                     DropDownList = new SelectList(VehicleModelList, "id", "Display");
                     break;
-                case Constants.VehicleDataSetManager.VehicleStatus:
-                    var VehicleStatusList = new List<VehicleStatusList>();
-                    foreach (DataRow dataRow in dt.Rows)
-                    {
-                        VehicleStatusList.Add(new VehicleStatusList
-                        {
-                            Id = (int)dataRow["StatusID"],
-                            Display = dataRow["VehicleStatus"].ToString()
-                        });
-                    }
-                    DropDownList = new SelectList(VehicleStatusList, "id", "Display");
-                    break;
+                
                 default:
                     break;
             }

@@ -18,6 +18,8 @@ using System.Web.Mvc;
 using MVCWebProject2.BLL;
 using Newtonsoft.Json;
 using MVCWebProject2.Areas.Admin.Models;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace MVCWebProject2.Areas.Admin.Controllers
 {
@@ -55,6 +57,9 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             ViewBag.NumberOfPages = _numberOfPages;
             ViewBag.NumberOfItems = _numberOfItems;
             ViewBag.CurrentPage = _pageNumber;
+            var ManufacturerList = ManufacturerBLL.GetManufacturerList();
+            var DropDownList = new SelectList(ManufacturerList, "Id", "Display");
+            ViewBag.ManufacturerList = DropDownList;
             return View(model);
         }
         #endregion
@@ -70,15 +75,16 @@ namespace MVCWebProject2.Areas.Admin.Controllers
         #region AddNewImage(POST)
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult AddNewImage(HttpPostedFileBase fileUpload)
+        public ActionResult AddNewImage(HttpPostedFileBase FileUpload)
         {
-            if (fileUpload != null && fileUpload.ContentLength > 0)
+            if (FileUpload != null && FileUpload.ContentLength > 0)
             {
                 try
                 {
                     //Save the new image
-                    var updatedBy = Request.Cookies["userInfo"]["FullName"];
-                    GalleryBLL.AddNewGalleryImage(fileUpload, updatedBy);
+                    var UpdatedBy = Request.Cookies["userInfo"]["FullName"];
+                    var ModelID = Convert.ToInt32(Request.Form["ModelID"]);
+                    GalleryBLL.AddNewGalleryImage(FileUpload, ModelID, UpdatedBy);
                     TempData["Message"] = "File uploaded successfully!";
                    
                     return RedirectToAction("Index/1/8");

@@ -105,6 +105,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             {
                 //Generate an empty model with populated dropdown list
                 var model = VehicleCategoriesBLL.GetVehicleList();
+                
                 //Create a temp list of our vehicle types to avoid multiple SQL reads when there are errors on the user form
                 TempData["SelectList"] = model.VehicleType;
                 return View(model);

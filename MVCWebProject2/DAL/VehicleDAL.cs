@@ -58,26 +58,6 @@ namespace MVCWebProject2.DAL
 
         #endregion
 
-        #region GetVehicleStatus
-        // **************** GET VEHICLE STATUS LIST *********************
-        public static DataTable GetVehicleStatus()
-        {
-            using (SqlConnection conn = new SqlConnection(connString))
-            {
-                using (SqlCommand cmd = new SqlCommand("GetVehicleStatus", conn))
-                {
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    SqlDataAdapter sd = new SqlDataAdapter(cmd);
-                    dt = new DataTable();
-                    conn.Open();
-                    sd.Fill(dt);
-                    conn.Close();
-                }
-            }
-            return dt;
-        }
-        #endregion
-
         #region GetVehicleGroupList
         // **************** GET VEHICLE CATEGORY LIST *********************
         public static DataTable GetVehicleGroupList(int ManufacturerID)
@@ -123,7 +103,7 @@ namespace MVCWebProject2.DAL
         public static int UpdateVehicle(int VehicleID,
                                         int ModelID,
                                         string RegistrationNumber,
-                                        int StatusID,
+                                        int CurrentMileage,
                                         int TransmissionID,
                                         int VehicleGroupID,
                                         int FuelID,
@@ -140,7 +120,7 @@ namespace MVCWebProject2.DAL
                     cmd.Parameters.AddWithValue("@VehicleGroupID", VehicleGroupID);
                     cmd.Parameters.AddWithValue("@ModelID", ModelID);
                     cmd.Parameters.AddWithValue("@RegistrationNumber", RegistrationNumber);
-                    cmd.Parameters.AddWithValue("@StatusID", StatusID);
+                    cmd.Parameters.AddWithValue("@CurrentMileage", CurrentMileage);
                     cmd.Parameters.AddWithValue("@TransmissionID", TransmissionID);
                     cmd.Parameters.AddWithValue("@FuelID", FuelID);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
@@ -159,7 +139,7 @@ namespace MVCWebProject2.DAL
         // **************** ADD NEW VEHICLE  *********************
         public static void AddNewVehicle(int ModelID,
                                         string RegistrationNumber,
-                                        int StatusID,
+                                        int CurrentMileage,
                                         int TransmissionID,
                                         int VehicleGroupID,
                                         int FuelID,
@@ -177,7 +157,7 @@ namespace MVCWebProject2.DAL
                     cmd.Parameters.AddWithValue("@VehicleGroupID", VehicleGroupID);
                     cmd.Parameters.AddWithValue("@ModelID", ModelID);
                     cmd.Parameters.AddWithValue("@RegistrationNumber", RegistrationNumber);
-                    cmd.Parameters.AddWithValue("@StatusID", StatusID);
+                    cmd.Parameters.AddWithValue("@CurrentMileage", CurrentMileage);
                     cmd.Parameters.AddWithValue("@TransmissionID", TransmissionID);
                     cmd.Parameters.AddWithValue("@FuelID", FuelID);
                     cmd.Parameters.AddWithValue("@AddedBy", UpdatedBy);

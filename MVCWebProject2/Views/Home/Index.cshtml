@@ -1,32 +1,148 @@
-﻿@{
-    ViewBag.Title = "Home Page";
+﻿@model IEnumerable<MVCWebProject2.Models.VehicleSearchResultModel>
+<style>
+    .modal-dialog-search {
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        bottom: 0;
+        margin: auto;
+        width: 400px;
+        height: 300px;
+    }
+</style>
+<script>
+    var startDate = "@ViewBag.StartDate";
+    var endDate = "@ViewBag.EndDate";
+    var idClicked = "";
+    $(document).ready(function () {
+        $(".DateRange").click(function (e) {
+            idClicked = e.target.parentElement.id;
+            //alert(idClicked);
+        });
+
+        $(function () {
+            $('.DateRange').daterangepicker({
+                singleDatePicker: true,
+                timePicker: true,
+                timePickerIncrement: 15,
+                timePicker24Hour: true,
+                alwaysShowCalendars: true,
+                opens: "center",
+                locale: {
+                    format: 'DD MMM YYYY HH:mm'
+                },
+                minDate: "@ViewBag.MinDate",
+                maxDate: "@ViewBag.MaxDate"
+            },
+                function (start, end, label) {
+                   if (idClicked == 'pickUpDate') {
+                        startDate = start.format('DD MMM YYYY HH:mm');
+                        $('#pickUp').html(startDate);
+                    } else {
+                        endDate = end.format('DD MMM YYYY HH:mm');
+                        $('#dropOff').html(endDate);
+                    }
+                });
+            
+        });
+
+        
+
+        $("#easyCarousel").carousel({
+            interval: 7000,
+            direction: 'left'
+        });
+    });
+
+</script>
+<div class="jumbotron">
+    <h1>EasyHire Car Rental</h1>
+    <h4>Search For Vehicles</h4>
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-xs-3 col-sm-2 col-md-2" for="DateRange">Pick Up</label>
+            <div class="btn-group DateRange" id="pickUpDate">
+                <a href="#" class="btn btn-primary" id="pickUp">@ViewBag.StartDate</a>
+                <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+            </div>
+        </div>
+    </div>
+    <div class="row">
+        <div class="form-group">
+            <label class="control-label col-xs-3 col-sm-2 col-md-2" for="DateRange">Drop Off</label>
+            <div class="btn-group DateRange" id="dropOffDate">
+                <a href="#" class="btn btn-primary" id="dropOff">@ViewBag.EndDate</a>
+                <a href="#" class="btn btn-primary dropdown-toggle" data-toggle="dropdown" aria-expanded="false"><span class="caret"></span></a>
+            </div>
+        </div>
+    </div>
+    <br /><br />
+    <button id="btnSubmit" class="btn btn-lg btn-primary" onclick="performSearch();">Find Vehicles!</button>
+</div>
+@if (Model.Count() > 0)
+{
+    @Html.Partial("VehicleSearchResults", Model)
+    <script>$('#searchResults').slideToggle(1500);</script>
+}
+else
+{
+    <div id="easyCarousel" class="carousel slide" data-ride="carousel">
+        <div class="carousel-inner">
+            <div class="item active" align="center">
+                <img src="~/images/aygo.png" alt="aygo.png" class="img-responsive" />
+            </div>
+            <div class="item" align="center">
+                <img src="~/images/audi-fiat-sm.png" alt="audi-fiat-sm.png" class="img-responsive" />
+            </div>
+            <div class="item" align="center">
+                <img src="~/images/rental_group.png" alt="rental_group.png" class="img-responsive" />
+            </div>
+            <div class="item" align="center">
+                <img src="~/images/hondas.png" alt="hondas.png" class="img-responsive" />
+            </div>
+            <div class="item" align="center">
+                <img src="~/images/kia-cerato-5.png" alt="kia-cerato-5.png" class="img-responsive" />
+            </div>
+        </div>
+    </div>
+
 }
 
-<div class="jumbotron">
-    <h1>ASP.NET</h1>
-    <p class="lead">ASP.NET is a free web framework for building great Web sites and Web applications using HTML, CSS and JavaScript.</p>
-    <p><a href="https://asp.net" class="btn btn-primary btn-lg">Learn more &raquo;</a></p>
+<div class="modal fade " id="myModal" data-backdrop="static">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+                <h1 class="modal-title text-center"><i class="glyphicon glyphicon-calendar glyphicon-align-center"></i> Hire Dates <i class="glyphicon glyphicon-calendar glyphicon-align-center"></i></h1>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="form-group">
+                        <label class="control-label col-xs-3 col-sm-3 col-md-2" for="DateRange">Hire Period</label>
+                        <div class="col-xs-9 col-sm-9 col-md-10">
+                            <div class="input-group">
+                                <span class="input-group-addon">
+                                    <i class="glyphicon glyphicon-calendar" aria="hidden" data-toggle="modal" data-target="#myModal"></i>
+                                </span>
+                                <input type="text" value="@ViewBag.StartDate" class="form-control DateRange" readonly />
+                                <br /><span id="HireDates"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
 </div>
-<p>This is the view bag contents @ViewBag.Theme</p>
-<p>Cookies @ViewBag.LoginDetails</p>
-<div class="row">
-    <div class="col-md-4">
-        <h2>Getting started</h2>
-        <p>
-            ASP.NET MVC gives you a powerful, patterns-based way to build dynamic websites that
-            enables a clean separation of concerns and gives you full control over markup
-            for enjoyable, agile development.
-        </p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301865">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Get more libraries</h2>
-        <p>NuGet is a free Visual Studio extension that makes it easy to add, remove, and update libraries and tools in Visual Studio projects.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301866">Learn more &raquo;</a></p>
-    </div>
-    <div class="col-md-4">
-        <h2>Web Hosting</h2>
-        <p>You can easily find a web hosting company that offers the right mix of features and price for your applications.</p>
-        <p><a class="btn btn-default" href="https://go.microsoft.com/fwlink/?LinkId=301867">Learn more &raquo;</a></p>
-    </div>
-</div>
+
+
+
+

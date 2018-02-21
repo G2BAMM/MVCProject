@@ -25,6 +25,12 @@ namespace MVCWebProject2
                 defaults: new { controller = "Account", action = "ExternalLoginCallback" });
 
             routes.MapRoute(
+                name: "searchVehicles",
+                url: "{controller}/{action}/{startDate:datetime}/{endDate:datetime}",
+                defaults: new { controller = "Home", action = "VehicleSearch", startDate = UrlParameter.Optional, endDate = UrlParameter.Optional },
+                namespaces: new[] { string.Format("{0}.Controllers", BuildManager.GetGlobalAsaxType().BaseType.Assembly.GetName().Name) }); //Programatically allows same controller names across the app e.g. root HomeController and then /Admin/HomeController)
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional },

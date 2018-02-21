@@ -17,12 +17,14 @@ var url = "/MVCWebProject/Admin/Gallery/GetJsonGallery/";
 var modelURL = "/MVCWebProject/Admin/Vehicle/GetJSONVehicleModels/"
 var filePath = "/MVCWebProject/images/uploads/"
 var updateModelURL = "/MVCWebProject/Admin/VehicleModel/UpdateModel/"
+var vehicleSearchURL = "/MVCWebProject/Home/VehicleSearch"
 /*
     //Production/Staging server settings
     var url = "/Admin/Gallery/GetJsonGallery/";
     var modelURL = "/Admin/Vehicle/GetJSONVehicleModels/"
     var filePath = "/images/uploads/"
     var updateModelURL = "/Admin/VehicleModel/UpdateModel/"
+    var vehicleSearchURL = "/Home/VehicleSearch"
 */
 var modelId = -1;
 var manufacturerId = -1;
@@ -32,7 +34,6 @@ $(document).ready(function () {
     $("body").tooltip({ selector: '[data-toggle=tooltip]' });
 
     //Accordion control management
-    
     $(".toggle-accordion").on("click", function () {
         var accordionId = $(this).attr("accordion-id"),
             numPanelOpen = $(accordionId + ' .collapse.in').length;
@@ -68,17 +69,29 @@ $(document).ready(function () {
         manufacturerId = idClicked;
     });
 
-//Ends document ready function
+    
+    //Ends document ready function
 });
 
 
+
+
 function ToggleModal(control) {
-    //Show or hide our modal
+    //Show or hide our modal[s]
     $('#' + control).modal('toggle');
 }
 
 function StartProgress(control) {
+    if ($("#ManufacturerID").prop("selectedIndex") == 0 || $("#ModelID").prop("selectedIndex") == 0) {
+        $('#FormError').html('Please select a manufacturer and model');
+        return;
+    }
+    if ($('#fileUpload').get(0).files.length == 0) {
+        $('#FormError').html('Please select a file to upload');
+        return;
+    }
     if ($('#fileUpload').get(0).files.length > 0) {
+        $('#FormError').html('');
         //Show the progress bar when we're uploading a file to the gallery
         $("#" + control).toggle();
         //Submit the form
@@ -97,7 +110,7 @@ function LoadGallery(control, page, items, pageControl) {
         $("#" + control).contents().remove();
         //Iterate through the gallery JSON objects and build the modal and bootstrap objects
         $.each(gallery, function (i, field) {
-            $("#" + control).append("<div class='col-sm-3'><img src='"
+            $("#" + control).append("<div class='col-xs-3 col-md-3'><img src='"
                 + filePath
                 + field.SmallThumbnail
                 + '' + ""
@@ -109,10 +122,10 @@ function LoadGallery(control, page, items, pageControl) {
                 + "');" + '"'
                 + " id='"
                 + field.ImageId
-                + "' /><br /><br /></div>");
-            
+                + "' /><span class='caption'>" + field.Manufacturer + ' ' + field.ModelName + "</span><br /><br /></div>");
+
         });
-        
+
         //Now generate the pagers
         CreatePagers(control, numberOfPages, page, items, pageControl);
     });
@@ -218,10 +231,10 @@ function RebuildMenu(control) {
 
 /****************** Accordion functions ***************************************/
 
-//This event also fires when the 'Cancel' button is clicked, as well as local calls in this script
+//This event fires when the 'Cancel' button is clicked, as well as local calls in this script
 function SwitchPanelBody(panelNumber) {
     //Flips the form and list panels around
-    if (!$('#main_content_' + panelNumber).is(":visible")){
+    if (!$('#main_content_' + panelNumber).is(":visible")) {
         //Reset the model number so that we can handle adding new models
         modelId = -1;
     }
@@ -247,7 +260,7 @@ function ClearModelName(manufacturerId) {
 }
 
 //Performs the save operation, which will either cause an update or an insert @ SQL,
-//dependent on whether a modelId with a value greater than 0 gets passed back
+//dependent on whether a modelId with a value greater than 0 gets passed back from the server result
 function SaveModel() {
     //Performs the JSON update and rebuild of the lists
 
@@ -261,7 +274,7 @@ function SaveModel() {
     }
 
     if (modelName.length > 50) {
-        //OvInput was over sized
+        //Input was over sized
         $("#error_" + manufacturerId).html('Cannot have more than 50 chars!');
         return;
     }
@@ -291,7 +304,7 @@ function SaveModel() {
         success: function (response) {
             //JSONIfy our response
             getData = JSON.stringify(response);
-            
+
             //If we have a duplicated model name then we will be returned a single text line as JSON so we can straight forwardly parse this and test
             if ($.parseJSON(getData) == "-1") {
                 //Generate the error message
@@ -327,7 +340,7 @@ function SaveModel() {
                 setTimeout(function () { SwitchPanelBody(manufacturerId); }, 3000);
             }
         },
-        
+
         error: function (response) {
             alert("Error " + response.statusText + ', ' + response.status + ', ' + response.url + response.responseJSON);
 
@@ -340,32 +353,90 @@ function SaveModel() {
             //Delay hiding it for a few seconds
             $("#ErrorMessage_" + manufacturerId).delay(4000).fadeOut('slow');
 
-            //Make sure our save button gets re-enabled in case so that the user can try again
+            //Make sure our save button gets re-enabled in so that the user can try add/updating again
             $("#save_" + manufacturerId).removeAttr('disabled');
         }
     });
-    
+
 }
-    //This fires when a model name is clicked inside an accordion pane
-    function OpenForm(ManufacturerID, ModelID, ModelName) {
-        //Presents the edit form for the 'vehicle model' that's being edited or added
-        manufacturerId = ManufacturerID;
-        modelId = ModelID;
-        var modelName = ModelName
-        var control = $("#Display_" + manufacturerId);
+//This fires when a model name is clicked inside an accordion pane
+function OpenForm(ManufacturerID, ModelID, ModelName) {
+    //Presents the edit form for the 'vehicle model' that's being edited or added
+    manufacturerId = ManufacturerID;
+    modelId = ModelID;
+    var modelName = ModelName
+    var control = $("#Display_" + manufacturerId);
 
-        //Set the 'vehicle model name' form field text value
-        $(control).val(modelName);
+    //Set the 'vehicle model name' form field text value
+    $(control).val(modelName);
 
-        //Make sure the saved successfully message is always hidden on a newly opened form
-        $("#Message_" + manufacturerId).hide();
+    //Hide any errors present from previous processes
+    $("#error_" + manufacturerId).html('');
 
-        //Make sure our save button gets re-enabled in case it was disabled by another process
-        $("#save_" + manufacturerId).removeAttr('disabled');
+    //Make sure the saved successfully message is always hidden on a newly opened form
+    $("#Message_" + manufacturerId).hide();
 
-        //Show the form panel now
-        SwitchPanelBody(manufacturerId);
-        
-    }
+    //Make sure our save button gets re-enabled in case it was disabled by another process
+    $("#save_" + manufacturerId).removeAttr('disabled');
+
+    //Show the form panel now
+    SwitchPanelBody(manufacturerId);
+
+}
 
 /****************** Ends Accordion functions ***************************************/
+
+/****************** Panel toggles for vehicle search results ***********************/
+
+function togglePanels(frontPanel, rearPanel) {
+    $('.panel-' + frontPanel).slideToggle(500);
+    $('.panel-' + rearPanel).slideToggle(500);
+}
+
+/****************** Ends Panel Toggle functions ************************************/
+
+/**
+ * Displays overlay with "Processing request..." text. Based on bootstrap modal. Contains animated progress bar.
+ */
+function showPleaseWait() {
+    var modalLoading = '<div class="modal" id="pleaseWaitDialog" data-backdrop="static" data-keyboard="false" role="dialog">\
+        <div class="modal-dialog-search">\
+            <div class="modal-content">\
+                <div class="modal-header">\
+                    <h4 class="modal-title">Processing request...</h4>\
+                </div>\
+                <div class="modal-body">\
+                    <div class="progress">\
+                      <div class="progress-bar progress-bar-default progress-bar-striped active" role="progressbar"\
+                      aria-valuenow="100" aria-valuemin="0" aria-valuemax="100" style="width:100%; height: 40px">\
+                      </div>\
+                    </div>\
+                </div>\
+            </div>\
+        </div>\
+    </div>';
+    $(document.body).append(modalLoading);
+    $("#pleaseWaitDialog").modal("show");
+}
+
+/**
+ * Hides "Please wait" overlay. See function showPleaseWait().
+ */
+function hidePleaseWait() {
+    $("#pleaseWaitDialog").modal("hide");
+}
+/**
+ * Searches for vehicles based on dates entered into the calender, or the default dates set at page/view load
+ */
+function performSearch() {
+    if (Date.parse(startDate) >= Date.parse(endDate)) {
+        alert("Drop off date must be later than pick up date!");
+        return;
+    }
+    $("#easyCarousel").slideToggle(1500);
+    showPleaseWait();
+    setTimeout(function () {
+        window.location = vehicleSearchURL + "?startDate=" + startDate + "&endDate=" + endDate;
+    }, 5000); 
+    $('#searchResults').slideToggle(1500);
+}

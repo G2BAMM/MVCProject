@@ -10,8 +10,10 @@ namespace MVCWebProject2
         public static void RegisterBundles(BundleCollection bundles)
         {
             bundles.Add(new ScriptBundle("~/bundles/jquery").Include(
-                        "~/Scripts/jquery-{version}.js",
-                        //"~/Scripts/jquery-ui.js",
+                        "~/Scripts/jquery-2.1.4.min.js",
+                        "~/Scripts/jquery-ui.js",
+                        "~/Scripts/moment.min.js",
+                        "~/Scripts/daterangepicker.js",
                         "~/Scripts/CustomScripts.js"));
 
             bundles.Add(new ScriptBundle("~/bundles/jqueryval").Include(
@@ -27,7 +29,8 @@ namespace MVCWebProject2
                       "~/Scripts/respond.js"));
 
             bundles.Add(new StyleBundle("~/Content/css").Include(
-                      "~/Content/site.css"));
+                    "~/Content/daterangepicker.css",      
+                    "~/Content/site.css"));
         }
     }
 }

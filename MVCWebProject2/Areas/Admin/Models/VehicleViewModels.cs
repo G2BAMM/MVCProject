@@ -30,8 +30,8 @@ namespace MVCWebProject2.Areas.Admin.Models
         public string RegistrationNumber { get; set; }
         [Display(Name = "Transmission")]
         public string TransmissionType { get; set; }
-        [Display(Name = "Current Status")]
-        public string VehicleStatus { get; set; }
+        [Display(Name = "Group")]
+        public string VehicleGroup { get; set; }
     }
 
     public class VehicleModelListView
@@ -44,14 +44,14 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleViewModel
     {
-        //The vehicle form add/update form
+        //The vehicle add/update form
         public int? VehicleID { get; set; }
         public SelectList VehicleManufacturerList { get; set; }
         public SelectList VehicleModelList { get; set; }
-        public SelectList VehicleStatusList { get; set; }
         public SelectList VehicleTransmissionList { get; set; }
         public SelectList VehicleGroupList { get; set; }
         public SelectList VehicleFuelList { get; set; }
+        public static int MinimumMileage { get; set; }
         [Required]
         [Display(Name = "Make")]
         public int ManufacturerID { get; set; }
@@ -63,8 +63,8 @@ namespace MVCWebProject2.Areas.Admin.Models
         [Display(Name = "Reg No")]
         public string RegistrationNumber { get; set; }
         [Required]
-        [Display(Name = "Status")]
-        public int StatusID { get; set; }
+        [Display(Name = "Current Mileage")]
+        public int CurrentMileage { get; set; }
         [Required]
         [Display(Name = "Transmission")]
         public int TransmissionID { get; set; }
@@ -79,6 +79,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleManufacturerList
     {
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
         public int Id { get; set; }
         [Required]
         [Display(Name = "Manufacturer")]
@@ -93,16 +94,6 @@ namespace MVCWebProject2.Areas.Admin.Models
         [Required]
         [Display(Name = "Model Name")]
         [StringLength(50, ErrorMessage = "50 chars max allowed for model")]
-        public string Display { get; set; }
-    }
-
-    public class VehicleStatusList
-    {
-        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
-        public int Id { get; set; }
-        [Required]
-        [Display(Name = "Hire Status")]
-        [StringLength(20, ErrorMessage = "20 chars max allowed for hire status")]
         public string Display { get; set; }
     }
 
@@ -125,7 +116,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class VehicleFuelList
     {
-        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects
+        //Used to build lists e.g. dropdowns, <ol><ul> or JSON Objects & Gallery
         public int Id { get; set; }
         [Required]
         [Display(Name = "Fuel Type")]
@@ -135,7 +126,7 @@ namespace MVCWebProject2.Areas.Admin.Models
 
     public class ModelByManufacturerList
     {
-        //Used to build paired dropdown lists for JSON Objects on the vehicle form
+        //Used to build paired dropdown lists for JSON Objects on the vehicle form & Gallery
         public SelectList VehicleManufacturerList { get; set; }
         public SelectList VehicleModelList { get; set; }
     }

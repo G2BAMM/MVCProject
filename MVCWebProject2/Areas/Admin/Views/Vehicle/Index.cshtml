@@ -25,11 +25,9 @@
                 <th>
                     @Html.DisplayNameFor(model => model.VehicleModel)
                 </th>
+                
                 <th>
-                    @Html.DisplayNameFor(model => model.TransmissionType)
-                </th>
-                <th>
-                    @Html.DisplayNameFor(model => model.VehicleStatus)
+                    @Html.DisplayNameFor(model => model.VehicleGroup)
                 </th>
                 <th></th>
             </tr>
@@ -47,15 +45,11 @@
                     @Html.DisplayFor(modelItem => item.VehicleModel)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.TransmissionType)
+                    @Html.DisplayFor(modelItem => item.VehicleGroup)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.VehicleStatus)
-                </td>
-                <td>
-                    @Html.ActionLink("Edit", "Edit", new { id = item.VehicleId }) |
-                    @Html.ActionLink("Details", "Details", new { id = item.VehicleId }) |
-                    @Html.ActionLink("Delete", "Delete", new { id = item.VehicleId })
+                    @Html.ActionLink("Edit", "Edit", new { id = item.VehicleId })
+                    
                 </td>
             </tr>
             }

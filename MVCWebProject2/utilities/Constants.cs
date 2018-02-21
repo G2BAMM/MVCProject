@@ -106,17 +106,7 @@ namespace MVCWebProject2.utilities
             VehicleGroup = 35
         }
 
-        public enum VehicleStatus
-        {
-            [StringValue("Available For Hire")]
-            AvailableForHire = 5,
-            [StringValue("In Servicing")]
-            InServicing = 10,
-            [StringValue("On-Hire")]
-            OnHire = 15,
-            [StringValue("Retired")]
-            Retired = 20
-        }
+        
     }
 
     

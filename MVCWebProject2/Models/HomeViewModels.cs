@@ -14,38 +14,48 @@
 */
 using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Web;
 
 namespace MVCWebProject2.Models
 {
-    public class VehicleViewModel
-    {
-        public int VehicleID { get; set; }
-        [Display(Name = "Manufacturer")]
-        public string Make { get; set; }
-
-        [Display(Name = "Model")]
-        public string ModelType { get; set; }
-
-        [Display(Name = "Body Type")]
-        public int BodyTypeId {get; set; }
-
-        [Display(Name = "No of Doors")]
-        public int NumberOfDoors { get; set; }
-    }
-
-    public class BodyType
-    {
-        public int Id { get; set; }
-        public string Description { get; set; }
-    }
-
 
     public class Theme
     {
         public string ThemeName { get; set; }
         public string ThemeCSS { get; set; }
+    }
+
+    public class VehicleSearchResultModel
+    {
+        public int CategoryId { get; set; }
+        public string VehicleClassType { get; set; }
+        public string ThumbNail { get; set; }
+        public string TransmissionType { get; set; }
+        public string NumberOfSeats { get; set; }
+        public string NumberOfDoors { get; set; }
+        public string NumberOfBags { get; set; }
+        public string Manufacturer { get; set; }
+        public string ModelName { get; set; }
+        public string FuelType { get; set; }
+        public decimal DailyRate { get; set; }
+        public decimal WeekendRate { get; set; }
+        public decimal WeeklyRate { get; set; }
+        public decimal MonthlyRate { get; set; }
+        public string BasicDescription { get; set; }
+        public List<RentalExtrasListModel> RentalExtras { get; set; }
+
+    }
+
+    public class RentalExtrasListModel
+    {
+        public int ExtraId { get; set; }
+        public string ExtraDescription { get; set; }
+        public decimal Price { get; set; }
+    }
+
+    public class VehicleSearchModel
+    {
+        public DateTime StartDate { get; set; }
+        public DateTime EndDate { get; set; }
+        
     }
 }

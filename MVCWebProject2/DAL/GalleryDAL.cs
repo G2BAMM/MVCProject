@@ -31,7 +31,7 @@ namespace MVCWebProject2.DAL
 
         #region AddNewGalleryImage
         // ***************** ADD NEW GALLERY IMAGE *********************
-        public static void AddNewGalleryImage(string ImageName, string UpdatedBy)
+        public static void AddNewGalleryImage(string ImageName, int ModelID, string UpdatedBy)
 
         {
             using (SqlConnection conn = new SqlConnection(connString))
@@ -41,6 +41,7 @@ namespace MVCWebProject2.DAL
 
                     cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@ImageName", ImageName);
+                    cmd.Parameters.AddWithValue("@ModelID", ModelID);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
                     conn.Open();
                     cmd.ExecuteNonQuery();

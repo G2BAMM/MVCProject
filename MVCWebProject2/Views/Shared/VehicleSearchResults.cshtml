@@ -1,0 +1,173 @@
+﻿@model IEnumerable<MVCWebProject2.Models.VehicleSearchResultModel>
+
+@using MVCWebProject2.utilities
+
+@{
+    /* Set our local vars, responsive rows and themed icon colours */
+
+    ViewBag.Title = "Home Page";
+    var frontPanel = 1;
+    var rearPanel = 2;
+    var loopCount = 0;
+    var newRow = "<div class='row'>";
+    var endRow = "</div>";
+    var iconColour = "black.png";
+    if (Request.Cookies["userInfo"] != null)
+    {
+        if (Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString() == Constants.BootstrapThemes.Cyborg.ToString()
+            || Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString() == Constants.BootstrapThemes.Darkly.ToString()
+            || Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString() == Constants.BootstrapThemes.Slate.ToString()
+            || Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString() == Constants.BootstrapThemes.Solar.ToString()
+            || Server.HtmlEncode(Request.Cookies["userInfo"]["BootstrapTheme"]).ToString() == Constants.BootstrapThemes.Superhero.ToString()
+            )
+        {
+            iconColour = "white.png";
+        }
+    }
+}
+<div id="searchResults" style="display:none">
+    @foreach (var item in Model)
+    {
+        //If this is the first record then it will always require a div with the 'row' class
+        //every other time when the loopCount is even we need to add a new row, this is required because of the panel flips and animations
+        //Containing them on the same row for all items causes unexpected behaviour when showing/hiding panels
+        if (loopCount % 2 == 0 || loopCount == 0)
+        {
+            //Loopcount is divisible by 2 or this is the first record so add a new row now
+            @Html.Raw(newRow)
+        }
+        <div class=".col-xs-12 .col-sm-12 col-md-6">
+            <div class="panel panel-default panel-@frontPanel">
+                <div class="panel-heading">
+                    @item.VehicleClassType: - @item.Manufacturer @item.ModelName or equivalent
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <img src="~/images/uploads/@item.ThumbNail" alt="@item.ThumbNail" class="img-responsive thumbnail" />
+                        </div>
+                        <div class="col-xs-6 pull-right">
+
+                            <table class="table table-responsive">
+                                <tr>
+                                    <td><img src="~/images/manual_transmission_@iconColour" /></td>
+                                    <td>@item.TransmissionType</td>
+                                </tr>
+                                <tr>
+                                    <td><img src="~/images/carseat_@iconColour" /></td>
+                                    <td>@item.NumberOfSeats</td>
+                                </tr>
+                                <tr>
+                                    <td><img src="~/images/car_door_@iconColour" /></td>
+                                    <td>@item.NumberOfDoors</td>
+                                </tr>
+                                <tr>
+                                    <td><img src="~/images/suitcase_@iconColour" /></td>
+                                    <td>@item.NumberOfBags</td>
+                                </tr>
+                                <tr>
+                                    <td><img src="~/images/fuel_pump_@iconColour" /></td>
+                                    <td>@item.FuelType</td>
+                                </tr>
+                            </table>
+                        </div>
+
+                    </div>
+                    <div class="jumbotron">
+                        <h3 align="center">Hire today for just</h3>
+                        <h1 align="center">&pound;@item.DailyRate.ToString("#,##0.00")</h1>
+                        @item.BasicDescription
+                    </div>
+
+                    <div class="btn-group btn-group-justified">
+                        <a href="javascript:togglePanels(@frontPanel, @rearPanel);" class="btn btn-default">Details</a>
+                        <!-- <a href="javascript:togglePanels(@frontPanel, @rearPanel);" class="btn btn-primary">Hire Me!</a>-->
+                        @Html.ActionLink("Hire Me!", "StartHireProcess", new { id = item.CategoryId }, new { @class = "btn btn-primary" })
+                    </div>
+                </div>
+                <div class="panel-footer"></div>
+            </div>
+
+
+            <div class="panel panel-info panel-@rearPanel" style="display: none;">
+                <div class="panel-heading">
+                    <button type="button" class="close" aria-label="Close" onclick="togglePanels(@frontPanel, @rearPanel);">
+                        Close <span aria-hidden="true">&times;</span>
+                    </button>
+                    @item.VehicleClassType
+                </div>
+                <div class="panel-body">
+                    <div class="row">
+                        <div class="col-xs-4">
+                            <img src="~/images/uploads/@item.ThumbNail" alt="@item.ThumbNail" class="img-responsive thumbnail" />
+                        </div>
+                        <div class="col-xs-8">
+                            <h3 class="ui-resizable">@item.Manufacturer @item.ModelName or equivalent</h3>
+                        </div>
+                    </div>
+                    <table class="table table-bordered table-responsive">
+                        <caption class="caption text-info">Rates Card</caption>
+                        <thead>
+                            <tr class="info">
+                                <th>Daily</th>
+                                <th>Weekend</th>
+                                <th>Weekly</th>
+                                <th>Monthly</th>
+                            </tr>
+                        </thead>
+                        <tr>
+                            <td>&pound;@item.DailyRate.ToString("#,##0.00")</td>
+                            <td>&pound;@item.WeekendRate.ToString("#,##0.00")<sup>&#8727;</sup></td>
+                            <td>&pound;@item.WeeklyRate.ToString("#,##0.00")<sup>&#8727;&#8727;</sup></td>
+                            <td>&pound;@item.MonthlyRate.ToString("#,##0.00")</td>
+                        </tr>
+                    </table>
+                    <table class="table table-bordered">
+                        <caption class="caption text-info">Extras</caption>
+                        <thead>
+                            <tr class="info">
+                                <th>Extra</th>
+                                <th>Price</th>
+                            </tr>
+                        </thead>
+                        @foreach (var extra in item.RentalExtras)
+                        {
+                            <tr>
+                                <td>@extra.ExtraDescription</td>
+                                <td>&pound;@extra.Price.ToString("#,##0.00")</td>
+                            </tr>
+                        }
+
+                    </table>
+                    <h6 class="text-info"><sup>&#8727;</sup> Weekend rates are for hires commening from 12:00 on Fridays until 17:00 on Sundays.</h6>
+                    <h6 class="text-info"><sup>&#8727;&#8727;</sup> Weekly rates are for hires commening from 12:00 on Mondays until 17:00 on Sundays.</h6>
+                    <!--<button onclick="togglePanels(@frontPanel, @rearPanel);" class="btn btn-primary">Click to flip me back!</button>-->
+                    <div class="btn-group btn-group-justified">
+                        <a href="javascript:togglePanels(@frontPanel, @rearPanel);" class="btn btn-primary">Back to Vehicle</a>
+                        <!-- <a href="javascript:togglePanels(@frontPanel, @rearPanel);" class="btn btn-primary">Hire Me!</a>-->
+                        @Html.ActionLink("Hire Me Now!", "StartHireProcess", new { id = item.CategoryId }, new { @class = "btn btn-success" })
+                    </div>
+                </div>
+                <div class="panel-footer"></div>
+            </div>
+        </div>
+        //Increment our loopcontrols
+        frontPanel += 2;
+        rearPanel += 2;
+        loopCount += 1;
+
+        //Do we need to close this row now?
+        if (loopCount % 2 == 0 && loopCount > 0)
+        {
+            //Loopcount is divisible by 2 so we need to close our row
+            @Html.Raw(endRow)
+        }
+
+    }
+
+    @if (loopCount % 2 > 0)
+    {
+        //If we exited the loop with an 'odd' loopcount then we only have one item on the bottom row, so we need to also close off the 'row' class div
+        @Html.Raw(endRow)
+    }
+</div>

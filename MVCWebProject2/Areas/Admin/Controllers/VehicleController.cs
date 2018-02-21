@@ -45,7 +45,6 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 //Set the temp data so that every time there is an error we rebuild our dropdown lists without making SQL requests
                 TempData["VehicleManufacturerList"] = model.VehicleManufacturerList;
                 TempData["VehicleModelList"] = model.VehicleModelList;
-                TempData["VehicleStatusList"] = model.VehicleStatusList;
                 TempData["VehicleTransmissionList"] = model.VehicleTransmissionList;
                 TempData["VehicleGroupList"] = model.VehicleGroupList;
                 TempData["VehicleFuelList"] = model.VehicleFuelList;
@@ -70,7 +69,6 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             //Repopulate the dropdown lists of vehicle attributes without asking SQL again
             model.VehicleManufacturerList = (SelectList)TempData["VehicleManufacturerList"];
             model.VehicleModelList = (SelectList)TempData["VehicleModelList"];
-            model.VehicleStatusList = (SelectList)TempData["VehicleStatusList"];
             model.VehicleTransmissionList = (SelectList)TempData["VehicleTransmissionList"];
             model.VehicleGroupList = (SelectList)TempData["VehicleGroupList"];
             model.VehicleFuelList = (SelectList)TempData["VehicleFuelList"];
@@ -89,7 +87,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 var result = VehicleBLL.UpdateVehicle((int)model.VehicleID, 
                                             model.ModelID, 
                                             model.RegistrationNumber, 
-                                            model.StatusID, 
+                                            model.CurrentMileage, 
                                             model.TransmissionID, 
                                             model.VehicleGroupID, 
                                             model.FuelID, 
@@ -122,14 +120,11 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 //Sending zero to this function will still retrieve the correct lists see the sp GetVehicleDetailsDataSet for details
                 var model = VehicleBLL.GetVehicleDetails(0);
 
-                //Status is read only on the form so we need to set the status as 'Available For Hire' when adding a new vehicle
-                //So we set the hidden field for the StatusID and that will in turn set the correct selected item on the dropdown list
-                model.StatusID = VehicleStatusBLL.GetVehicleStatusIDByStatusType(Constants.VehicleStatus.AvailableForHire.GetStringValue());
+                
 
                 //Set the temp data so that every time there is an error we rebuild our dropdown lists without making SQL requests
                 TempData["VehicleManufacturerList"] = model.VehicleManufacturerList;
                 //TempData["VehicleModelList"] = model.VehicleModelList;
-                TempData["VehicleStatusList"] = model.VehicleStatusList;
                 TempData["VehicleTransmissionList"] = model.VehicleTransmissionList;
                 TempData["VehicleGroupList"] = model.VehicleGroupList;
                 TempData["VehicleFuelList"] = model.VehicleFuelList;
@@ -157,7 +152,6 @@ namespace MVCWebProject2.Areas.Admin.Controllers
             //Repopulate the dropdown lists of vehicle attributes without asking SQL again
             model.VehicleManufacturerList = (SelectList)TempData["VehicleManufacturerList"];
             model.VehicleModelList = (SelectList)TempData["VehicleModelList"];
-            model.VehicleStatusList = (SelectList)TempData["VehicleStatusList"];
             model.VehicleTransmissionList = (SelectList)TempData["VehicleTransmissionList"];
             model.VehicleGroupList = (SelectList)TempData["VehicleGroupList"];
             model.VehicleFuelList = (SelectList)TempData["VehicleFuelList"];
@@ -171,7 +165,7 @@ namespace MVCWebProject2.Areas.Admin.Controllers
                 //Now update the record
                 VehicleBLL.AddNewVehicle(model.ModelID,
                                             model.RegistrationNumber,
-                                            model.StatusID,
+                                            model.CurrentMileage,
                                             model.TransmissionID,
                                             model.VehicleGroupID,
                                             model.FuelID,

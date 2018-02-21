@@ -61,6 +61,7 @@ namespace MVCWebProject2.DAL
                                           decimal WeekendRate,
                                           decimal MonthlyRate,
                                           int NumberOfSeats,
+                                          int NumberOfDoors,
                                           string BasicDescription,
                                           int LuggageCapacity,
                                           string UpdatedBy)
@@ -81,6 +82,7 @@ namespace MVCWebProject2.DAL
                     cmd.Parameters.AddWithValue("@WeekendRate", WeekendRate);
                     cmd.Parameters.AddWithValue("@MonthlyRate", MonthlyRate);
                     cmd.Parameters.AddWithValue("@NumberOfSeats", NumberOfSeats);
+                    cmd.Parameters.AddWithValue("@NumberOfDoors", NumberOfDoors);
                     cmd.Parameters.AddWithValue("@BasicDescription", BasicDescription);
                     cmd.Parameters.AddWithValue("@LuggageCapacity", LuggageCapacity);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);
@@ -147,6 +149,7 @@ namespace MVCWebProject2.DAL
                                           decimal WeekendRate,
                                           decimal MonthlyRate,
                                           int NumberOfSeats,
+                                          int NumberOfDoors,
                                           string BasicDescription,
                                           int LuggageCapacity,
                                           string UpdatedBy)
@@ -158,7 +161,7 @@ namespace MVCWebProject2.DAL
                 using (SqlCommand cmd = new SqlCommand("UpdateVehicleCategory", conn))
                 {
                     cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@VehicleType", Id);
+                    cmd.Parameters.AddWithValue("@CategoryID", Id);
                     cmd.Parameters.AddWithValue("@VehicleClassType", VehicleClassType);
                     cmd.Parameters.AddWithValue("@VehicleTypeId", VehicleTypeId);
                     cmd.Parameters.AddWithValue("@ImageId", ImageId);
@@ -167,6 +170,7 @@ namespace MVCWebProject2.DAL
                     cmd.Parameters.AddWithValue("@WeekendRate", WeekendRate);
                     cmd.Parameters.AddWithValue("@MonthlyRate", MonthlyRate);
                     cmd.Parameters.AddWithValue("@NumberOfSeats", NumberOfSeats);
+                    cmd.Parameters.AddWithValue("@NumberOfDoors", NumberOfDoors);
                     cmd.Parameters.AddWithValue("@BasicDescription", BasicDescription);
                     cmd.Parameters.AddWithValue("@LuggageCapacity", LuggageCapacity);
                     cmd.Parameters.AddWithValue("@UpdatedBy", UpdatedBy);

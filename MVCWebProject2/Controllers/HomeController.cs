@@ -19,6 +19,8 @@ using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.EntityFramework;
 using System.Threading.Tasks;
 using MVCWebProject2.utilities;
+using MVCWebProject2.BLL;
+using System;
 
 namespace MVCWebProject2.Controllers
 {
@@ -90,9 +92,29 @@ namespace MVCWebProject2.Controllers
                 //var divisor = 0;
                 //var result = 10 / divisor;
              }
+            List<VehicleSearchResultModel> model = new List<VehicleSearchResultModel>();
+            SetDefaultDates(DateTime.Now.AddDays(1), DateTime.Now.AddDays(2));
+            return View(model);
             
+        }
+        #endregion
+
+        #region VehicleSearch(GET)
+        
+        public ActionResult VehicleSearch(DateTime startDate, DateTime endDate)
+        {
+            SetDefaultDates(startDate, endDate);
+            var model = VehicleSearchBLL.GetVehicleSearchResults(StartDate: startDate, EndDate: endDate);
+            
+            return View("Index", model);
+            
+        }
+        #endregion
+
+        #region StartHireProcess(GET)
+        public ActionResult StartHireProcess(int id)
+        {
             return View();
-            
         }
         #endregion
 
@@ -114,42 +136,16 @@ namespace MVCWebProject2.Controllers
         }
         #endregion
 
-
-        [Authorize]
-        public ActionResult Vehicle()
+        #region SetDefaultDates
+        private void SetDefaultDates(DateTime startDate, DateTime endDate)
         {
-            ViewBag.Message = "Your vehicle list";
-            return View(SeedData());
+            //Set the default values and string types on the JQuery script to manage the search calendar
+            ViewBag.MinDate = DateTime.Now.AddDays(1).ToString("dd MMM yyyy 09:00)");
+            ViewBag.MaxDate = DateTime.Now.AddMonths(1).ToString("dd MMM yyyy 23:59");
+            ViewBag.StartDate = Convert.ToDateTime(startDate).ToString("dd MMM yyyy HH:mm");
+            ViewBag.EndDate = Convert.ToDateTime(endDate).ToString("dd MMM yyyy HH:mm");
         }
+        #endregion
 
-        private List<VehicleViewModel> SeedData()
-        {
-            List<VehicleViewModel> list1 = new List<VehicleViewModel>();
-            List<BodyType> bodyTypeList = new List<BodyType>();
-            BodyType bodyType = new BodyType
-            {
-                Id = 1,
-                Description = "Saloon"
-            };
-            bodyTypeList.Add(bodyType);
-
-            for (int i = 1; i < 11; i++)
-            {
-                VehicleViewModel vehicle = new VehicleViewModel
-                {
-                    VehicleID = i,
-                    BodyTypeId = i,
-                    Make = "Ford",
-                    ModelType = "Fiesta",
-                    NumberOfDoors = 4
-                };
-                list1.Add(vehicle);
-            }
-            return list1;
-        }
-
-       
-
-        
     }
 }

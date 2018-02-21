@@ -40,6 +40,8 @@ namespace MVCWebProject2.BLL
                     MainImage = row["ImageName"].ToString().Trim(),
                     ThumbnailImage = row["ImageName"].ToString().Replace(Path.GetExtension(row["ImageName"].ToString()).ToLower(), "_thumb") + Path.GetExtension(row["ImageName"].ToString()).ToLower().Trim(),
                     SmallThumbnail = row["ImageName"].ToString().Replace(Path.GetExtension(row["ImageName"].ToString()).ToLower(), "_small") + Path.GetExtension(row["ImageName"].ToString()).ToLower().Trim(),
+                    Manufacturer = row["Manufacturer"].ToString(),
+                    ModelName = row["ModelName"].ToString(),
                     Disabled = (bool)row["Disabled"]
                 };
                 myList.Add(myListItems);
@@ -80,11 +82,11 @@ namespace MVCWebProject2.BLL
         #region ImageUploadProcesses
 
         #region AddNewGalleryImage
-        public static void AddNewGalleryImage(HttpPostedFileBase fileUpload, string updatedBy)
+        public static void AddNewGalleryImage(HttpPostedFileBase fileUpload, int ModelID, string UpdatedBy)
         {
             try
             {
-                var fileName = Path.GetFileName(fileUpload.FileName);
+                var FileName = Path.GetFileName(fileUpload.FileName);
                 //Make sure we don't attempt to upload a very large file
                 if (fileUpload.ContentLength > 1048576) //1MB limit
                 {
@@ -92,12 +94,13 @@ namespace MVCWebProject2.BLL
                 }
 
                 //We need to check that it's a valid image we have uploaded
-                if (!ValidateFileExtension(fileName))
+                if (!ValidateFileExtension(FileName))
                 {
                     //Invalid file type so refuse the upload
                     throw new InvalidCastException("Invalid file type, only files with the extension 'JPG' or 'PNG' allowed.");
                 }
 
+               
 
                 //Now we can try to create our images
                 WebImage uploadedImage = new WebImage(fileUpload.InputStream);
@@ -110,25 +113,25 @@ namespace MVCWebProject2.BLL
                 }
 
                 //Remove any spaces in the image filename and replace with underscores
-                fileName = fileName.Replace(" ", "_");
+                FileName = FileName.Replace(" ", "_");
 
                 //Generate a unique filename, which will include the original name too
-                fileName = DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss") + "_" + fileName;
+                FileName = DateTime.Now.ToString("dd_MM_yyyy_HH_mm_ss") + "_" + FileName;
 
                 //Generate the 'save to' path for the raw uploaded file
                 var path = HttpContext.Current.Server.MapPath("~/images/uploads/");
 
                 //Now save the original file to disk
-                uploadedImage.Save(path + fileName);
+                uploadedImage.Save(path + FileName);
 
                 //Generate the thumbnails and save them
-                var thumbnailImage = ResizeImage(uploadedImage, "thumb", fileName);
+                var thumbnailImage = ResizeImage(uploadedImage, "thumb", FileName);
                 thumbnailImage.Save(path + thumbnailImage.FileName);
-                var smallThumbnailImage = ResizeImage(uploadedImage, "small", fileName);
+                var smallThumbnailImage = ResizeImage(uploadedImage, "small", FileName);
                 smallThumbnailImage.Save(path + smallThumbnailImage.FileName);
 
                 //Finally update the DB now
-                GalleryDAL.AddNewGalleryImage(fileName, updatedBy);
+                GalleryDAL.AddNewGalleryImage(FileName, ModelID, UpdatedBy);
             }
             finally
             {
